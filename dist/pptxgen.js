@@ -946,13 +946,18 @@ var PptxGenJS = function(){
 
 		// OPTION: Title
 		if ( rel.opts.showTitle ) {
+			var align = rel.opts.titleAlign == 'left' ? 'l' : rel.opts.titleAlign == 'right' ? 'r' : false;
 			strXml += '<c:title>';
 			strXml += ' <c:tx>';
 			strXml += '  <c:rich>';
 			strXml += '  <a:bodyPr rot="0"/>';
 			strXml += '  <a:lstStyle/>';
 			strXml += '  <a:p>';
-			strXml += '    <a:pPr>';
+			if(align) {
+				strXml += '    <a:pPr algn="' + align + '">';
+			} else {
+				strXml += '    <a:pPr>';
+			}
 			strXml += '      <a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.titleFontSize || DEF_FONT_SIZE) +'00" u="none">';
 			strXml += '        <a:solidFill><a:srgbClr val="'+ (rel.opts.titleColor || '000000') +'"/></a:solidFill>';
 			strXml += '        <a:latin typeface="'+ (rel.opts.titleFontFace || 'Arial') +'"/>';
