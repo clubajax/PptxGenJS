@@ -946,8 +946,10 @@ function genSlides_Chart(pptx) {
 			showValue  : false,
 			showPercent: true,
 			showLegend : true,
-			showTitle  : false,
+			legendFontSize: 18,
 
+			showTitle: true,
+			titlePos: { x: 0, y: 0 },
 			title        : 'Project Status',
 			titleColor   : '33CF22',
 			titleFontFace: 'Helvetica Neue',
