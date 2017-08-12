@@ -337,15 +337,18 @@ slide.addChart({TYPE}, {DATA}, {OPTIONS});
 | `chartColorsOpacity` | number | percent | `100` | data color opacity percent | 1-100. Ex: `{ chartColorsOpacity:50 }` |
 | `fill`          | string  |         |           | fill/background color | hex color code. Ex: `{ fill:'0088CC' }` |
 | `legendPos`     | string  |         | `r`       | chart legend position | `b` (bottom), `tr` (top-right), `l` (left), `r` (right), `t` (top) |
+| `legendFontSize`| number  | points  | `10`      | legend font size      |  1-256. Ex: `{ legendFontSize: 13 }`|
 | `showLabel`     | boolean |         | `false`   | show data labels      | `true` or `false` |
 | `showLegend`    | boolean |         | `false`   | show chart legend     | `true` or `false` |
 | `showPercent`   | boolean |         | `false`   | show data percent     | `true` or `false` |
 | `showTitle`     | boolean |         | `false`   | show chart title      | `true` or `false` |
 | `showValue`     | boolean |         | `false`   | show data values      | `true` or `false` |
 | `title`         | string  |         |           | chart title           | a string. Ex: `{ title:'Sales by Region' }` |
+| `titleAlign`    | string  |         | `center`  | chart text align      | `left` `center` or `right` Ex: `{ titleAlign:'left' }` |
 | `titleColor`    | string  |         | `000000`  | title color           | hex color code. Ex: `{ titleColor:'0088CC' }` |
 | `titleFontFace` | string  |         | `Arial`   | font face             | font name. Ex: `{ titleFontFace:'Arial' }` |
 | `titleFontSize` | number  | points  | `18`      | font size             | 1-256. Ex: `{ titleFontSize:12 }` |
+| `titlePos`      | object  |         |           | title position        | object with x and y values. Ex: `{ titlePos:{x: 0, y: 10} }` |
 
 ### Chart Axis Options
 | Option                 | Type    | Unit    | Default   | Description             | Possible Values                            |
@@ -373,7 +376,7 @@ slide.addChart({TYPE}, {DATA}, {OPTIONS});
 | `barDir`               | string  |         | `col`     | bar direction              | (*Bar Chart*) `bar` (horizontal) or `col` (vertical). Ex: `{barDir:'bar'}` |
 | `barGapWidthPct`       | number  | percent | `150`     | width % between bar groups | (*Bar Chart*) 0-999. Ex: `{ barGapWidthPct:50 }` |
 | `barGrouping`          | string  |         |`clustered`| bar grouping               | (*Bar Chart*) `clustered` or `stacked` or `percentStacked`. |
-| `dataBorder`           | object  |         |           | data border          | object with `pt` and `color` values. Ex: `border:{pt:'1', color:'f1f1f1'}` |
+| `dataBorder`           | object  |         |           | data border                | object with `pt` and `color` values. Ex: `border:{pt:'1', color:'f1f1f1'}` |
 | `dataLabelColor`       | string  |         | `000000`  | value-axis color           | hex color code. Ex: `{ dataLabelColor:'0088CC' }`     |
 | `dataLabelFormatCode`  | string  |         |           | format to show data value  | format string. Ex: `{ dataLabelFormatCode:'#,##0' }` [MicroSoft Number Format Codes](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68)  |
 | `dataLabelFontFace`    | string  |         | `Arial`   | value-axis font face       | font name. Ex: `{ titleFontFace:'Arial' }`   |

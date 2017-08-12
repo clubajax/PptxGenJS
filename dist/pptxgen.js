@@ -290,10 +290,10 @@ var PptxGenJS = function(){
 							strSharedStrings += '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ (rel.data[0].labels.length + rel.data.length + 1) +'" uniqueCount="'+ (rel.data[0].labels.length + rel.data.length +1) +'">'
 
 							// A: Add Labels
-							rel.data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ label +'</t></si>'; });
+								rel.data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ label +'</t></si>'; });
 
 							// B: Add Series
-							rel.data.forEach(function(objData,idx){ strSharedStrings += '<si><t>'+ (objData.name || ' ') +'</t></si>'; });
+									rel.data.forEach(function(objData,idx){ strSharedStrings += '<si><t>'+ (objData.name || ' ') +'</t></si>'; });
 
 							// C: Add 'blank' for A1
 							strSharedStrings += '<si><t xml:space="preserve"></t></si>';
@@ -322,54 +322,54 @@ var PptxGenJS = function(){
 						strSheetXml += '<sheetViews><sheetView tabSelected="1" workbookViewId="0"><selection activeCell="B1" sqref="B1"/></sheetView></sheetViews>';
 						strSheetXml += '<sheetFormatPr defaultRowHeight="15"/>';
 						strSheetXml += '<cols>';
-						strSheetXml += '<col min="10" max="100" width="20" customWidth="1"/>';
+						strSheetXml += '  <col min="10" max="100" width="20" customWidth="1"/>';
 						rel.data[0].labels.forEach(function(){ strSheetXml += '<col min="10" max="100" width="10" customWidth="1"/>' });
 						strSheetXml += '</cols>';
 						strSheetXml += '<sheetData>';
 
-						/* EX: INPUT: `rel.data`
-						[
-							{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
-							{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
-							{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
-						];
-						*/
-						/* EX: OUTPUT: lineChart Worksheet:
-							-|---A---|--B--|--C--|--D--|
-							1|       | Red | Amb | Grn |
-							2|Jan-17 |   11|   22|   33|
-							3|Feb-17 |   55|   43|   70|
-							4|Mar-17 |   56|  143|   99|
-							5|Apr-17 |   65|    3|  120|
-							6|May-17 |   75|   93|  170|
-							-|-------|-----|-----|-----|
-						*/
+							/* EX: INPUT: `rel.data`
+							[
+								{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
+								{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
+								{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
+							];
+							*/
+							/* EX: OUTPUT: lineChart Worksheet:
+								-|---A---|--B--|--C--|--D--|
+								1|       | Red | Amb | Grn |
+								2|Jan-17 |   11|   22|   33|
+								3|Feb-17 |   55|   43|   70|
+								4|Mar-17 |   56|  143|   99|
+								5|Apr-17 |   65|    3|  120|
+								6|May-17 |   75|   93|  170|
+								-|-------|-----|-----|-----|
+							*/
 
-						// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
-						strSheetXml += '<row r="1">';
-						strSheetXml += '<c r="A1" t="s"><v>'+ (rel.data.length + rel.data[0].labels.length) +'</v></c>';
+							// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
+							strSheetXml += '<row r="1">';
+							strSheetXml += '<c r="A1" t="s"><v>'+ (rel.data.length + rel.data[0].labels.length) +'</v></c>';
 						for (var idx=1; idx<=rel.data[0].labels.length; idx++) {
-							// FIXME: Max cols is 52
-							strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
-							strSheetXml += '<v>'+ (idx-1) +'</v>';
-							strSheetXml += '</c>';
-						}
-						strSheetXml += '</row>';
-
-						// B: Add data row(s)
-						rel.data.forEach(function(row,idx){
-							// Leading col is reserved for the label, so hard-code it, then loop over col values
-							strSheetXml += '<row r="'+ (idx+2) +'">';
-							strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
-							strSheetXml += '<v>'+ (rel.data[0].values.length + idx + 1) +'</v>';
-							strSheetXml += '</c>';
-							row.values.forEach(function(val,idy){
-								strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
-								strSheetXml += '<v>'+ val +'</v>';
+								// FIXME: Max cols is 52
+								strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
+								strSheetXml += '<v>'+ (idx-1) +'</v>';
 								strSheetXml += '</c>';
-							});
+							}
 							strSheetXml += '</row>';
-						});
+
+							// B: Add data row(s)
+							rel.data.forEach(function(row,idx){
+								// Leading col is reserved for the label, so hard-code it, then loop over col values
+								strSheetXml += '<row r="'+ (idx+2) +'">';
+								strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
+								strSheetXml += '<v>'+ (rel.data[0].values.length + idx + 1) +'</v>';
+								strSheetXml += '</c>';
+								row.values.forEach(function(val,idy){
+								strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
+									strSheetXml += '<v>'+ val +'</v>';
+									strSheetXml += '</c>';
+								});
+								strSheetXml += '</row>';
+							});
 
 						strSheetXml += '</sheetData>';
 						strSheetXml += '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>';
@@ -946,13 +946,18 @@ var PptxGenJS = function(){
 
 		// OPTION: Title
 		if ( rel.opts.showTitle ) {
+			var align = rel.opts.titleAlign == 'left' ? 'l' : rel.opts.titleAlign == 'right' ? 'r' : false;
 			strXml += '<c:title>';
 			strXml += ' <c:tx>';
 			strXml += '  <c:rich>';
 			strXml += '  <a:bodyPr rot="0"/>';
 			strXml += '  <a:lstStyle/>';
 			strXml += '  <a:p>';
+			if(align) {
+				strXml += '    <a:pPr algn="' + align + '">';
+			} else {
 			strXml += '    <a:pPr>';
+			}
 			strXml += '      <a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.titleFontSize || DEF_FONT_SIZE) +'00" u="none">';
 			strXml += '        <a:solidFill><a:srgbClr val="'+ (rel.opts.titleColor || '000000') +'"/></a:solidFill>';
 			strXml += '        <a:latin typeface="'+ (rel.opts.titleFontFace || 'Arial') +'"/>';
@@ -968,7 +973,18 @@ var PptxGenJS = function(){
 			strXml += '  </a:p>';
 			strXml += '  </c:rich>';
 			strXml += ' </c:tx>';
+			if (rel.opts.titlePos) {
+				strXml += '<c:layout>';
+				strXml += '  <c:manualLayout>';
+				strXml += '    <c:xMode val="edge"/>';
+				strXml += '    <c:yMode val="edge"/>';
+				strXml += '    <c:x val="'+rel.opts.titlePos.x+'"/>';
+				strXml += '    <c:y val="'+rel.opts.titlePos.y+'"/>';
+				strXml += '  </c:manualLayout>';
+				strXml += '</c:layout>';
+			} else {
 			strXml += ' <c:layout/>';
+			}
 			strXml += ' <c:overlay val="0"/>';
 			strXml += '</c:title>';
 			strXml += '<c:autoTitleDeleted val="0"/>';
@@ -991,17 +1007,17 @@ var PptxGenJS = function(){
 				// A: "Series" block for every data row
 				/* EX:
 					data: [
-				     {
-				       name: 'Region 1',
-				       labels: ['April', 'May', 'June', 'July'],
-				       values: [17, 26, 53, 96]
-				     },
-				     {
-				       name: 'Region 2',
-				       labels: ['April', 'May', 'June', 'July'],
-				       values: [55, 43, 70, 58]
-				     }
-				    ]
+					 {
+					   name: 'Region 1',
+					   labels: ['April', 'May', 'June', 'July'],
+					   values: [17, 26, 53, 96]
+					 },
+					 {
+					   name: 'Region 2',
+					   labels: ['April', 'May', 'June', 'July'],
+					   values: [55, 43, 70, 58]
+					 }
+					]
 				*/
 				rel.data.forEach(function(obj,idx){
 					strXml += '<c:ser>';
@@ -1045,7 +1061,7 @@ var PptxGenJS = function(){
 						strXml += '  <c:symbol val="'+ rel.opts.lineDataSymbol +'"/>';
 						if ( rel.opts.lineDataSymbolSize ) strXml += '  <c:size val="'+ rel.opts.lineDataSymbolSize +'"/>'; // Defaults to "auto" otherwise (but this is usually too small, so there is a default)
 						strXml += '  <c:spPr>';
-	  					strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
+						strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
 						strXml += '    <a:ln w="9525" cap="flat"><a:solidFill><a:srgbClr val="'+ strSerColor +'"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
 						strXml += '    <a:effectLst/>';
 						strXml += '  </c:spPr>';
@@ -1192,8 +1208,8 @@ var PptxGenJS = function(){
 					strXml += ' <c:majorGridlines>\
 								<c:spPr>\
 								  <a:ln w="12700" cap="flat">\
-								    <a:solidFill><a:srgbClr val="'+(rel.opts.gridLineColor ? rel.opts.gridLineColor : "888888")+'"/></a:solidFill>\
-								    <a:prstDash val="solid"/><a:round/>\
+									<a:solidFill><a:srgbClr val="'+(rel.opts.gridLineColor ? rel.opts.gridLineColor : "888888")+'"/></a:solidFill>\
+									<a:prstDash val="solid"/><a:round/>\
 								  </a:ln>\
 								</c:spPr>\
 								</c:majorGridlines>';
@@ -1322,25 +1338,25 @@ var PptxGenJS = function(){
 					strXml += '  </c:dLbl>';
 				});
 				strXml += '<c:numFmt formatCode="'+ rel.opts.dataLabelFormatCode +'" sourceLinked="0"/>\
-		            <c:txPr>\
-		              <a:bodyPr/>\
-		              <a:lstStyle/>\
-		              <a:p>\
-		                <a:pPr>\
-		                  <a:defRPr b="0" i="0" strike="noStrike" sz="1800" u="none">\
-		                    <a:solidFill><a:srgbClr val="000000"/></a:solidFill><a:latin typeface="Arial"/>\
-		                  </a:defRPr>\
-		                </a:pPr>\
-		              </a:p>\
-		            </c:txPr>\
-		            <c:dLblPos val="ctr"/>\
-		            <c:showLegendKey val="0"/>\
-		            <c:showVal val="0"/>\
-		            <c:showCatName val="1"/>\
-		            <c:showSerName val="0"/>\
-		            <c:showPercent val="1"/>\
-		            <c:showBubbleSize val="0"/>\
-		            <c:showLeaderLines val="0"/>';
+					<c:txPr>\
+					  <a:bodyPr/>\
+					  <a:lstStyle/>\
+					  <a:p>\
+						<a:pPr>\
+						  <a:defRPr b="0" i="0" strike="noStrike" sz="1800" u="none">\
+							<a:solidFill><a:srgbClr val="000000"/></a:solidFill><a:latin typeface="Arial"/>\
+						  </a:defRPr>\
+						</a:pPr>\
+					  </a:p>\
+					</c:txPr>\
+					<c:dLblPos val="ctr"/>\
+					<c:showLegendKey val="0"/>\
+					<c:showVal val="0"/>\
+					<c:showCatName val="1"/>\
+					<c:showSerName val="0"/>\
+					<c:showPercent val="1"/>\
+					<c:showBubbleSize val="0"/>\
+					<c:showLeaderLines val="0"/>';
 				strXml += '</c:dLbls>';
 
 				// 2: "Categories"
@@ -1391,7 +1407,25 @@ var PptxGenJS = function(){
 
 			// OPTION: Legend
 			// IMPORTANT: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
-			if ( rel.opts.showLegend ) strXml += '<c:legend><c:legendPos val="'+ rel.opts.legendPos +'"/><c:layout/><c:overlay val="0"/></c:legend>';
+			if ( rel.opts.showLegend ) {
+				strXml += '<c:legend>';
+				strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
+				strXml += '<c:layout/>';
+				strXml += '<c:overlay val="0"/>';
+				if(rel.opts.legendFontSize){
+					strXml += '<c:txPr>';
+					strXml += '  <a:bodyPr/>';
+					strXml += '  <a:lstStyle/>';
+					strXml += '  <a:p>';
+					strXml += '  <a:pPr>';
+					strXml += '    <a:defRPr sz="'+(Number(rel.opts.legendFontSize) * 100)+'"/>';
+					strXml += '    </a:pPr>';
+					strXml += '    <a:endParaRPr lang="en-US"/>';
+					strXml += '  </a:p>';
+					strXml += '</c:txPr>';
+				}
+				strXml += '</c:legend>';
+		}
 		}
 
 		strXml += '  <c:plotVisOnly val="1"/>';
@@ -2044,7 +2078,7 @@ var PptxGenJS = function(){
 						|      |      |  C2  |  D2  |
 						\------|------|------|------/
 					*/
- 					$.each(arrTabRows, function(rIdx,row){
+					$.each(arrTabRows, function(rIdx,row){
 						// A: Create row if needed (recall one may be created in loop below for rowspans, so dont assume we need to create one each iteration)
 						if ( !objTableGrid[rIdx] ) objTableGrid[rIdx] = {};
 
@@ -2292,12 +2326,12 @@ var PptxGenJS = function(){
 					break;
 
 				case 'image':
-			        strSlideXml += '<p:pic>';
+					strSlideXml += '<p:pic>';
 					strSlideXml += '  <p:nvPicPr>'
 					strSlideXml += '    <p:cNvPr id="'+ (idx + 2) +'" name="Object '+ (idx + 1) +'" descr="'+ slideObj.image +'">';
 					if ( slideObj.hyperlink ) strSlideXml += '<a:hlinkClick r:id="rId'+ slideObj.hyperlink.rId +'" tooltip="'+ (slideObj.hyperlink.tooltip ? decodeXmlEntities(slideObj.hyperlink.tooltip) : '') +'"/>';
 					strSlideXml += '    </p:cNvPr>';
-			        strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
+					strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
 					strSlideXml += '  </p:nvPicPr>';
 					strSlideXml += '<p:blipFill><a:blip r:embed="rId' + slideObj.imageRid + '" cstate="print"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>';
 					strSlideXml += '<p:spPr>'
@@ -3103,7 +3137,7 @@ var PptxGenJS = function(){
 			else {
 				// Audio/Video files consume *TWO* rId's:
 				// <Relationship Id="rId2" Target="../media/media1.mov" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/video"/>
-			    // <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
+				// <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
 				slideObjRels.push({
 					path: (strPath || 'preencoded'+strExtn),
 					type: strType+'/'+strExtn,

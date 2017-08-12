@@ -946,8 +946,10 @@ function genSlides_Chart(pptx) {
 			showValue  : false,
 			showPercent: true,
 			showLegend : true,
-			showTitle  : false,
+			legendFontSize: 18,
 
+			showTitle: true,
+			titlePos: { x: 0, y: 0 },
 			title        : 'Project Status',
 			titleColor   : '33CF22',
 			titleFontFace: 'Helvetica Neue',
@@ -1072,10 +1074,10 @@ function genSlides_Chart(pptx) {
 					labels: ['City A', 'City A', 'City C'],
 					values: [.20, .32, .41]
 				}, {
-				name: 'Low',
-				labels: ['City A', 'City A', 'City C'],
-				values: [-0.11, -0.22, -0.29]
-			}
+					name: 'Low',
+					labels: ['City A', 'City A', 'City C'],
+					values: [-0.11, -0.22, -0.29]
+				}
 			], {  x:0.5, y:0.5, w:'90%', h:'90%',
 				valAxisMaxVal:1,
 				barDir: 'bar',
@@ -1086,7 +1088,11 @@ function genSlides_Chart(pptx) {
 				barGrouping: 'stacked',
 				catAxisLabelPos: 'low',
 				valueBarColors: true,
-				//dataLabelPosition: 'outEnd',
+				titleAlign: 'left',
+				titleFontSize: 14,
+				showTitle: true,
+				titlePos: { x: 0, y: 0 },
+				title: 'Assuming the concept had the hundreds and thousands of features, how appealing would you, in your infinite wisdom, find these attributes?',
 				chartColors: ['0077BF','4E9D2D','ECAA00','5FC4E3','DE4216','154384', '7D666A','A3C961','EF907B','9BA0A3'],
 				invertedColors: [ '0065A2', '428526', 'C99100', '51A7C1', 'BD3813', '123970', '6A575A', '8BAB52', 'CB7A69', '84888B' ], // DOCTHIS
 				barGapWidthPct: 25,
