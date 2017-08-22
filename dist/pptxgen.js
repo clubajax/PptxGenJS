@@ -61,8 +61,8 @@ if ( NODEJS ) {
 
 var PptxGenJS = function(){
 	// CONSTANTS
-	var APP_VER = "1.7.0";
-	var APP_REL = "20170807";
+	var APP_VER = "1.8.0-beta";
+	var APP_REL = "20170810";
 	//
 	var MASTER_OBJECTS = {
 		'chart': { name:'chart' },
@@ -290,10 +290,10 @@ var PptxGenJS = function(){
 							strSharedStrings += '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ (rel.data[0].labels.length + rel.data.length + 1) +'" uniqueCount="'+ (rel.data[0].labels.length + rel.data.length +1) +'">'
 
 							// A: Add Labels
-							rel.data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ label +'</t></si>'; });
+								rel.data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ label +'</t></si>'; });
 
 							// B: Add Series
-							rel.data.forEach(function(objData,idx){ strSharedStrings += '<si><t>'+ (objData.name || ' ') +'</t></si>'; });
+									rel.data.forEach(function(objData,idx){ strSharedStrings += '<si><t>'+ (objData.name || ' ') +'</t></si>'; });
 
 							// C: Add 'blank' for A1
 							strSharedStrings += '<si><t xml:space="preserve"></t></si>';
@@ -327,49 +327,49 @@ var PptxGenJS = function(){
 						strSheetXml += '</cols>';
 						strSheetXml += '<sheetData>';
 
-						/* EX: INPUT: `rel.data`
-						[
-							{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
-							{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
-							{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
-						];
-						*/
-						/* EX: OUTPUT: lineChart Worksheet:
-							-|---A---|--B--|--C--|--D--|
-							1|       | Red | Amb | Grn |
-							2|Jan-17 |   11|   22|   33|
-							3|Feb-17 |   55|   43|   70|
-							4|Mar-17 |   56|  143|   99|
-							5|Apr-17 |   65|    3|  120|
-							6|May-17 |   75|   93|  170|
-							-|-------|-----|-----|-----|
-						*/
+							/* EX: INPUT: `rel.data`
+							[
+								{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
+								{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
+								{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
+							];
+							*/
+							/* EX: OUTPUT: lineChart Worksheet:
+								-|---A---|--B--|--C--|--D--|
+								1|       | Red | Amb | Grn |
+								2|Jan-17 |   11|   22|   33|
+								3|Feb-17 |   55|   43|   70|
+								4|Mar-17 |   56|  143|   99|
+								5|Apr-17 |   65|    3|  120|
+								6|May-17 |   75|   93|  170|
+								-|-------|-----|-----|-----|
+							*/
 
-						// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
-						strSheetXml += '<row r="1">';
-						strSheetXml += '<c r="A1" t="s"><v>'+ (rel.data.length + rel.data[0].labels.length) +'</v></c>';
+							// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
+							strSheetXml += '<row r="1">';
+							strSheetXml += '<c r="A1" t="s"><v>'+ (rel.data.length + rel.data[0].labels.length) +'</v></c>';
 						for (var idx=1; idx<=rel.data[0].labels.length; idx++) {
-							// FIXME: Max cols is 52
-							strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
-							strSheetXml += '<v>'+ (idx-1) +'</v>';
-							strSheetXml += '</c>';
-						}
-						strSheetXml += '</row>';
-
-						// B: Add data row(s)
-						rel.data.forEach(function(row,idx){
-							// Leading col is reserved for the label, so hard-code it, then loop over col values
-							strSheetXml += '<row r="'+ (idx+2) +'">';
-							strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
-							strSheetXml += '<v>'+ (rel.data[0].values.length + idx + 1) +'</v>';
-							strSheetXml += '</c>';
-							row.values.forEach(function(val,idy){
-								strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
-								strSheetXml += '<v>'+ val +'</v>';
+								// FIXME: Max cols is 52
+								strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
+								strSheetXml += '<v>'+ (idx-1) +'</v>';
 								strSheetXml += '</c>';
-							});
+							}
 							strSheetXml += '</row>';
-						});
+
+							// B: Add data row(s)
+							rel.data.forEach(function(row,idx){
+								// Leading col is reserved for the label, so hard-code it, then loop over col values
+								strSheetXml += '<row r="'+ (idx+2) +'">';
+								strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
+								strSheetXml += '<v>'+ (rel.data[0].values.length + idx + 1) +'</v>';
+								strSheetXml += '</c>';
+								row.values.forEach(function(val,idy){
+								strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
+									strSheetXml += '<v>'+ val +'</v>';
+									strSheetXml += '</c>';
+								});
+								strSheetXml += '</row>';
+							});
 
 						strSheetXml += '</sheetData>';
 						strSheetXml += '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>';
@@ -670,8 +670,8 @@ var PptxGenJS = function(){
 	}
 
 	/**
-	 * Magic happens here
-	 */
+	* Magic happens here
+	*/
 	function parseTextToLines(cell, inWidth) {
 		var CHAR = 2.2 + (cell.opts && cell.opts.lineWeight ? cell.opts.lineWeight : 0); // Character Constant (An approximation of the Golden Ratio)
 		var CPL = (inWidth*EMU / ( (cell.opts.font_size || DEF_FONT_SIZE)/CHAR )); // Chars-Per-Line
@@ -708,8 +708,8 @@ var PptxGenJS = function(){
 	}
 
 	/**
-	 * Magic happens here
-	 */
+	* Magic happens here
+	*/
 	function getSlidesForTableRows(inArrRows, opts) {
 		var LINEH_MODIFIER = 1.9;
 		var opts = opts || {};
@@ -921,8 +921,8 @@ var PptxGenJS = function(){
 	*/
 
 	/**
-	 * @see: http://www.datypic.com/sc/ooxml/s-dml-chart.xsd.html
-	 */
+	* @see: http://www.datypic.com/sc/ooxml/s-dml-chart.xsd.html
+	*/
 	function makeXmlCharts(rel) {
 		function getExcelColName(length) {
 			var strName = '';
@@ -956,7 +956,7 @@ var PptxGenJS = function(){
 			if(align) {
 				strXml += '    <a:pPr algn="' + align + '">';
 			} else {
-				strXml += '    <a:pPr>';
+			strXml += '    <a:pPr>';
 			}
 			strXml += '      <a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.titleFontSize || DEF_FONT_SIZE) +'00" u="none">';
 			strXml += '        <a:solidFill><a:srgbClr val="'+ (rel.opts.titleColor || '000000') +'"/></a:solidFill>';
@@ -983,7 +983,7 @@ var PptxGenJS = function(){
 				strXml += '  </c:manualLayout>';
 				strXml += '</c:layout>';
 			} else {
-				strXml += ' <c:layout/>';
+			strXml += ' <c:layout/>';
 			}
 			strXml += ' <c:overlay val="0"/>';
 			strXml += '</c:title>';
@@ -1061,16 +1061,17 @@ var PptxGenJS = function(){
 						strXml += '  <c:symbol val="'+ rel.opts.lineDataSymbol +'"/>';
 						if ( rel.opts.lineDataSymbolSize ) strXml += '  <c:size val="'+ rel.opts.lineDataSymbolSize +'"/>'; // Defaults to "auto" otherwise (but this is usually too small, so there is a default)
 						strXml += '  <c:spPr>';
-						strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
+	  					strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
 						strXml += '    <a:ln w="9525" cap="flat"><a:solidFill><a:srgbClr val="'+ strSerColor +'"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
 						strXml += '    <a:effectLst/>';
 						strXml += '  </c:spPr>';
 						strXml += '</c:marker>';
 					}
 
-					if(rel.data.length === 1 && rel.opts.chartColors || rel.opts.valueBarColors) {
+					// Color bar chart bars various colors
+					// Allow users with a single data set to pass their own array of colors (check for this using != ours)
+					if (( rel.data.length === 1 || rel.opts.valueBarColors ) && rel.opts.chartColors != BARCHART_COLORS ) {
 						// Series Data Point colors
-						// This is a template (not actual values), so only do this loop once.
 						obj.values.forEach(function (value, index) {
 							var invert = rel.opts.invertedColors ? 0 : 1;
 							var colors = value < 0 ? rel.opts.invertedColors : rel.opts.chartColors;
@@ -1158,53 +1159,53 @@ var PptxGenJS = function(){
 				strXml += '</c:'+ rel.opts.type +'Chart>';
 
 				// B: "Category Axis"
-			{
-				strXml += '<c:catAx>';
-				strXml += '  <c:axId val="2094734552"/>';
-				strXml += '  <c:scaling><c:orientation val="'+ (rel.opts.catAxisOrientation || (rel.opts.barDir == 'col' ? 'minMax' : 'minMax')) +'"/></c:scaling>';
-				strXml += '  <c:delete val="0"/>';
-				strXml += '  <c:axPos val="'+ (rel.opts.barDir == 'col' ? 'b' : 'l') +'"/>';
-				strXml += '  <c:numFmt formatCode="General" sourceLinked="0"/>';
-				strXml += '  <c:majorTickMark val="out"/>';
-				strXml += '  <c:minorTickMark val="none"/>';
-				strXml += '  <c:tickLblPos val="'+ (rel.opts.tickLblPos || rel.opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
-				strXml += '  <c:spPr>';
-				strXml += '    <a:ln w="12700" cap="flat"><a:solidFill><a:srgbClr val="888888"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
-				strXml += '  </c:spPr>';
-				strXml += '  <c:txPr>';
-				strXml += '    <a:bodyPr rot="0"/>';
-				strXml += '    <a:lstStyle/>';
-				strXml += '    <a:p>';
-				strXml += '    <a:pPr>';
-				strXml += '<a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.catAxisLabelFontSize || DEF_FONT_SIZE) +'00" u="none">';
-				strXml += '<a:solidFill><a:srgbClr val="'+ (rel.opts.catAxisLabelColor || '000000') +'"/></a:solidFill>';
-				strXml += '<a:latin typeface="'+ (rel.opts.catAxisLabelFontFace || 'Arial') +'"/>';
-				strXml += '   </a:defRPr>';
-				strXml += '  </a:pPr>';
-				strXml += '  </a:p>';
-				strXml += ' </c:txPr>';
-				strXml += ' <c:crossAx val="2094734553"/>';
-				strXml += ' <c:crosses val="autoZero"/>';
-				strXml += ' <c:auto val="1"/>';
-				strXml += ' <c:lblAlgn val="ctr"/>';
-				strXml += ' <c:noMultiLvlLbl val="1"/>';
-				strXml += '</c:catAx>';
-			}
+				{
+					strXml += '<c:catAx>';
+					strXml += '  <c:axId val="2094734552"/>';
+					strXml += '  <c:scaling><c:orientation val="'+ (rel.opts.catAxisOrientation || (rel.opts.barDir == 'col' ? 'minMax' : 'minMax')) +'"/></c:scaling>';
+					strXml += '  <c:delete val="0"/>';
+					strXml += '  <c:axPos val="'+ (rel.opts.barDir == 'col' ? 'b' : 'l') +'"/>';
+					strXml += '  <c:numFmt formatCode="General" sourceLinked="0"/>';
+					strXml += '  <c:majorTickMark val="out"/>';
+					strXml += '  <c:minorTickMark val="none"/>';
+					strXml += '  <c:tickLblPos val="'+ (rel.opts.catAxisLabelPos || rel.opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
+					strXml += '  <c:spPr>';
+					strXml += '    <a:ln w="12700" cap="flat"><a:solidFill><a:srgbClr val="888888"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
+					strXml += '  </c:spPr>';
+					strXml += '  <c:txPr>';
+					strXml += '    <a:bodyPr rot="0"/>';
+					strXml += '    <a:lstStyle/>';
+					strXml += '    <a:p>';
+					strXml += '    <a:pPr>';
+					strXml += '<a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.catAxisLabelFontSize || DEF_FONT_SIZE) +'00" u="none">';
+					strXml += '<a:solidFill><a:srgbClr val="'+ (rel.opts.catAxisLabelColor || '000000') +'"/></a:solidFill>';
+					strXml += '<a:latin typeface="'+ (rel.opts.catAxisLabelFontFace || 'Arial') +'"/>';
+					strXml += '   </a:defRPr>';
+					strXml += '  </a:pPr>';
+					strXml += '  </a:p>';
+					strXml += ' </c:txPr>';
+					strXml += ' <c:crossAx val="2094734553"/>';
+					strXml += ' <c:crosses val="autoZero"/>';
+					strXml += ' <c:auto val="1"/>';
+					strXml += ' <c:lblAlgn val="ctr"/>';
+					strXml += ' <c:noMultiLvlLbl val="1"/>';
+					strXml += '</c:catAx>';
+				}
 
 				// C: "Value Axis"
-			{
-				strXml += '<c:valAx>';
-				strXml += '  <c:axId val="2094734553"/>';
-				strXml += '  <c:scaling>';
-				strXml += '    <c:orientation val="'+ (rel.opts.valAxisOrientation || (rel.opts.barDir == 'col' ? 'minMax' : 'minMax')) +'"/>';
-				if (rel.opts.valAxisMaxVal) strXml += '<c:max val="'+ rel.opts.valAxisMaxVal +'"/>';
-				strXml += '  </c:scaling>';
-				strXml += '  <c:delete val="0"/>';
-				strXml += '  <c:axPos val="'+ (rel.opts.barDir == 'col' ? 'l' : 'b') +'"/>';
+				{
+					strXml += '<c:valAx>';
+					strXml += '  <c:axId val="2094734553"/>';
+					strXml += '  <c:scaling>';
+					strXml += '    <c:orientation val="'+ (rel.opts.valAxisOrientation || (rel.opts.barDir == 'col' ? 'minMax' : 'minMax')) +'"/>';
+					if (rel.opts.valAxisMaxVal) strXml += '<c:max val="'+ rel.opts.valAxisMaxVal +'"/>';
+					strXml += '  </c:scaling>';
+					strXml += '  <c:delete val="0"/>';
+					strXml += '  <c:axPos val="'+ (rel.opts.barDir == 'col' ? 'l' : 'b') +'"/>';
 
-				// TESTING: 20170527 - omitting this 'strXml' works fine in Keynote/PPT-Online!!
-				// TODO: gridLine options! (colors/style(solid/dashed) -OR- NONE (eg:omit this section)
-				strXml += ' <c:majorGridlines>\
+					// TESTING: 20170527 - omitting this 'strXml' works fine in Keynote/PPT-Online!!
+					// TODO: gridLine options! (colors/style(solid/dashed) -OR- NONE (eg:omit this section)
+					strXml += ' <c:majorGridlines>\
 								<c:spPr>\
 								  <a:ln w="12700" cap="flat">\
 								    <a:solidFill><a:srgbClr val="'+(rel.opts.gridLineColor ? rel.opts.gridLineColor : "888888")+'"/></a:solidFill>\
@@ -1212,44 +1213,43 @@ var PptxGenJS = function(){
 								  </a:ln>\
 								</c:spPr>\
 								</c:majorGridlines>';
-				strXml += ' <c:numFmt formatCode="'+(rel.opts.axisLabelFormatCode ? rel.opts.axisLabelFormatCode : 'General')+'" sourceLinked="0"/>';
-				strXml += ' <c:majorTickMark val="out"/>';
-				strXml += ' <c:minorTickMark val="none"/>';
-				strXml += ' <c:tickLblPos val="'+ (rel.opts.barDir == 'col' ? 'nextTo' : 'low') +'"/>';
-				strXml += ' <c:spPr>';
-				strXml += '   <a:ln w="12700" cap="flat">';
-				if (rel.opts.axisLineShow) {
-					strXml += '     <a:solidFill>';
-					strXml += '       <a:srgbClr val="'+(rel.opts.axisLineColor ? rel.opts.axisLineColor : "888888")+'"/>';
-					strXml += '     </a:solidFill>';
-				} else {
-					strXml += '     <a:noFill/>';
+					strXml += ' <c:numFmt formatCode="'+ (rel.opts.valAxisLabelFormatCode ? rel.opts.valAxisLabelFormatCode : 'General') +'" sourceLinked="0"/>';
+					strXml += ' <c:majorTickMark val="out"/>';
+					strXml += ' <c:minorTickMark val="none"/>';
+					strXml += ' <c:tickLblPos val="'+ (rel.opts.barDir == 'col' ? 'nextTo' : 'low') +'"/>';
+					strXml += ' <c:spPr>';
+					strXml += '   <a:ln w="12700" cap="flat">';
+
+					var showAxis = !!rel.opts.valAxisLineShow || rel.opts.valAxisLineShow === undefined;
+					if (!showAxis) {
+						strXml += '     <a:noFill/>';
+					} else {
+						strXml += '     <a:solidFill>';
+						strXml += '       <a:srgbClr val="'+(rel.opts.axisLineColor ? rel.opts.axisLineColor : "888888")+'"/>';
+						strXml += '     </a:solidFill>';
+					}
+					strXml += '     <a:prstDash val="solid"/>';
+					strXml += '     <a:round/>';
+					strXml += '   </a:ln>';
+					strXml += ' </c:spPr>';
+					strXml += ' <c:txPr>';
+					strXml += '  <a:bodyPr rot="0"/>';
+					strXml += '  <a:lstStyle/>';
+					strXml += '  <a:p>';
+					strXml += '    <a:pPr>';
+					strXml += '      <a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.valAxisLabelFontSize || DEF_FONT_SIZE) +'00" u="none">';
+					strXml += '        <a:solidFill><a:srgbClr val="'+ (rel.opts.valAxisLabelColor || '000000') +'"/></a:solidFill>';
+					strXml += '        <a:latin typeface="'+ (rel.opts.valAxisLabelFontFace || 'Arial') +'"/>';
+					strXml += '      </a:defRPr>';
+					strXml += '    </a:pPr>';
+					strXml += '  </a:p>';
+					strXml += ' </c:txPr>';
+					strXml += ' <c:crossAx val="2094734552"/>';
+					strXml += ' <c:crosses val="autoZero"/>';
+					strXml += ' <c:crossBetween val="'+ ( rel.opts.type == 'area' ? 'midCat' : 'between' ) +'"/>';
+					if ( rel.opts.valAxisMajorUnit ) strXml += ' <c:majorUnit val="'+ rel.opts.valAxisMajorUnit +'"/>';
+					strXml += '</c:valAx>';
 				}
-				strXml += '     <a:prstDash val="solid"/>';
-				strXml += '     <a:round/>';
-				strXml += '   </a:ln>';
-				strXml += ' </c:spPr>';
-				strXml += ' <c:txPr>';
-				strXml += '  <a:bodyPr rot="0"/>';
-				strXml += '  <a:lstStyle/>';
-				strXml += '  <a:p>';
-				strXml += '    <a:pPr>';
-				strXml += '      <a:defRPr b="0" i="0" strike="noStrike" sz="'+ (rel.opts.valAxisLabelFontSize || DEF_FONT_SIZE) +'00" u="none">';
-				strXml += '        <a:solidFill><a:srgbClr val="'+ (rel.opts.valAxisLabelColor || '000000') +'"/></a:solidFill>';
-				strXml += '        <a:latin typeface="'+ (rel.opts.valAxisLabelFontFace || 'Arial') +'"/>';
-				strXml += '      </a:defRPr>';
-				strXml += '    </a:pPr>';
-				strXml += '  </a:p>';
-				strXml += ' </c:txPr>';
-				strXml += ' <c:crossAx val="2094734552"/>';
-				strXml += ' <c:crosses val="autoZero"/>';
-				strXml += ' <c:crossBetween val="'+ ( rel.opts.type == 'area' ? 'midCat' : 'between' ) +'"/>';
-				if(rel.opts.majorUnit) {
-					strXml += ' <c:majorUnit val="'+rel.opts.majorUnit+'"/>';
-				}
-				//strXml += ' <c:minorUnit val="12.5"/>'; // NOTE: Not Required.	// TODO: Add OPTION?
-				strXml += '</c:valAx>';
-			}
 
 				// Done with CHART.BAR/LINE
 				break;
@@ -1449,32 +1449,32 @@ var PptxGenJS = function(){
 	}
 
 	/**
-	 * DESC: Generate the XML for text and its options (bold, bullet, etc) including text runs (word-level formatting)
-	 * EX:
-	 <p:txBody>
-	 <a:bodyPr wrap="none" lIns="50800" tIns="50800" rIns="50800" bIns="50800" anchor="ctr">
-	 </a:bodyPr>
-	 <a:lstStyle/>
-	 <a:p>
-	 <a:pPr marL="228600" indent="-228600"><a:buSzPct val="100000"/><a:buChar char="&#x2022;"/></a:pPr>
-	 <a:r>
-	 <a:t>bullet 1 </a:t>
-	 </a:r>
-	 <a:r>
-	 <a:rPr>
-	 <a:solidFill><a:srgbClr val="7B2CD6"/></a:solidFill>
-	 </a:rPr>
-	 <a:t>colored text</a:t>
-	 </a:r>
-	 </a:p>
-	 </p:txBody>
-	 * NOTES:
-	 * - PPT text lines [lines followed by line-breaks] are createing using <p>-aragraph's
-	 * - Bullets are a paragprah-level formatting device
-	 *
-	 * @param slideObj (object) - slideObj -OR- table `cell` object
-	 * @returns XML string containing the param object's text and formatting
-	 */
+	* DESC: Generate the XML for text and its options (bold, bullet, etc) including text runs (word-level formatting)
+	* EX:
+		<p:txBody>
+			<a:bodyPr wrap="none" lIns="50800" tIns="50800" rIns="50800" bIns="50800" anchor="ctr">
+			</a:bodyPr>
+			<a:lstStyle/>
+			<a:p>
+			  <a:pPr marL="228600" indent="-228600"><a:buSzPct val="100000"/><a:buChar char="&#x2022;"/></a:pPr>
+			  <a:r>
+				<a:t>bullet 1 </a:t>
+			  </a:r>
+			  <a:r>
+				<a:rPr>
+				  <a:solidFill><a:srgbClr val="7B2CD6"/></a:solidFill>
+				</a:rPr>
+				<a:t>colored text</a:t>
+			  </a:r>
+			</a:p>
+		  </p:txBody>
+	* NOTES:
+	* - PPT text lines [lines followed by line-breaks] are createing using <p>-aragraph's
+	* - Bullets are a paragprah-level formatting device
+	*
+	* @param slideObj (object) - slideObj -OR- table `cell` object
+	* @returns XML string containing the param object's text and formatting
+	*/
 	function genXmlTextBody(slideObj) {
 		// FIRST: Shapes without text, etc. may be sent here during buidl, but have no text to render so return empty string
 		if ( !slideObj.text ) return '';
@@ -1654,18 +1654,18 @@ var PptxGenJS = function(){
 	}
 
 	/**
-	 <a:r>
-	 <a:rPr lang="en-US" sz="2800" dirty="0" smtClean="0">
-	 <a:solidFill>
-	 <a:srgbClr val="00FF00">
-	 </a:srgbClr>
-	 </a:solidFill>
-	 <a:latin typeface="Courier New" pitchFamily="34" charset="0"/>
-	 <a:cs typeface="Courier New" pitchFamily="34" charset="0"/>
-	 </a:rPr>
-	 <a:t>Misc font/color, size = 28</a:t>
-	 </a:r>
-	 */
+	<a:r>
+	  <a:rPr lang="en-US" sz="2800" dirty="0" smtClean="0">
+		<a:solidFill>
+		  <a:srgbClr val="00FF00">
+		  </a:srgbClr>
+		</a:solidFill>
+		<a:latin typeface="Courier New" pitchFamily="34" charset="0"/>
+		<a:cs typeface="Courier New" pitchFamily="34" charset="0"/>
+	  </a:rPr>
+	  <a:t>Misc font/color, size = 28</a:t>
+	</a:r>
+	*/
 	function genXmlTextRun(opts, text_string) {
 		var xmlTextRun = '';
 		var paraProp = '';
@@ -1722,8 +1722,8 @@ var PptxGenJS = function(){
 	}
 
 	/**
-	 * DESC: Builds <a:bodyPr></a:bodyPr> tag
-	 */
+	* DESC: Builds <a:bodyPr></a:bodyPr> tag
+	*/
 	function genXmlBodyProperties(objOptions) {
 		var bodyProperties = '<a:bodyPr';
 
@@ -1844,11 +1844,11 @@ var PptxGenJS = function(){
 
 	function makeXmlRootRels() {
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-			+ '  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>'
-			+ '  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>'
-			+ '  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/>'
-			+ '</Relationships>';
+					+ '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
+					+ '  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>'
+					+ '  <Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>'
+					+ '  <Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="ppt/presentation.xml"/>'
+					+ '</Relationships>';
 		return strXml;
 	}
 
@@ -1915,10 +1915,10 @@ var PptxGenJS = function(){
 		}
 		intRelNum++;
 		strXml += '  <Relationship Id="rId'+  intRelNum    +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/presProps" Target="presProps.xml"/>'
-			+ '  <Relationship Id="rId'+ (intRelNum+1) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>'
-			+ '  <Relationship Id="rId'+ (intRelNum+2) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>'
-			+ '  <Relationship Id="rId'+ (intRelNum+3) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>'
-			+ '</Relationships>';
+				+ '  <Relationship Id="rId'+ (intRelNum+1) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/viewProps" Target="viewProps.xml"/>'
+				+ '  <Relationship Id="rId'+ (intRelNum+2) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme" Target="theme/theme1.xml"/>'
+				+ '  <Relationship Id="rId'+ (intRelNum+3) +'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/tableStyles" Target="tableStyles.xml"/>'
+				+ '</Relationships>';
 
 		return strXml;
 	}
@@ -1926,23 +1926,23 @@ var PptxGenJS = function(){
 	function makeXmlSlideLayout() {
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF;
 		strXml += '<p:sldLayout xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" type="title" preserve="1">'+CRLF
-			+ '<p:cSld name="Title Slide">'
-			+ '<p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
-			+ '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="685800" y="2130425"/><a:ext cx="7772400" cy="1470025"/></a:xfrm></p:spPr><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master title style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp>'
-			+ '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Subtitle 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="subTitle" idx="1"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="1371600" y="3886200"/><a:ext cx="6400800" cy="1752600"/></a:xfrm></p:spPr><p:txBody><a:bodyPr/><a:lstStyle>'
-			+ '  <a:lvl1pPr marL="0"       indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr>'
-			+ '  <a:lvl2pPr marL="457200"  indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl2pPr>'
-			+ '  <a:lvl3pPr marL="914400"  indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl3pPr>'
-			+ '  <a:lvl4pPr marL="1371600" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl4pPr>'
-			+ '  <a:lvl5pPr marL="1828800" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl5pPr>'
-			+ '  <a:lvl6pPr marL="2286000" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl6pPr>'
-			+ '  <a:lvl7pPr marL="2743200" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl7pPr>'
-			+ '  <a:lvl8pPr marL="3200400" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl8pPr>'
-			+ '  <a:lvl9pPr marL="3657600" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl9pPr></a:lstStyle><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master subtitle style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="4" name="Date Placeholder 3"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="dt" sz="half" idx="10"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:fld id="{F8166F1F-CE9B-4651-A6AA-CD717754106B}" type="datetimeFigureOut"><a:rPr lang="en-US" smtClean="0"/><a:t>01/01/2016</a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="5" name="Footer Placeholder 4"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ftr" sz="quarter" idx="11"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="6" name="Slide Number Placeholder 5"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldNum" sz="quarter" idx="12"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:fld id="'+SLDNUMFLDID+'" type="slidenum"><a:rPr lang="en-US" smtClean="0"/><a:t></a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp></p:spTree></p:cSld>'
-			+ '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>';
+				+ '<p:cSld name="Title Slide">'
+				+ '<p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr>'
+				+ '<p:sp><p:nvSpPr><p:cNvPr id="2" name="Title 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ctrTitle"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="685800" y="2130425"/><a:ext cx="7772400" cy="1470025"/></a:xfrm></p:spPr><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master title style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp>'
+				+ '<p:sp><p:nvSpPr><p:cNvPr id="3" name="Subtitle 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="subTitle" idx="1"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="1371600" y="3886200"/><a:ext cx="6400800" cy="1752600"/></a:xfrm></p:spPr><p:txBody><a:bodyPr/><a:lstStyle>'
+				+ '  <a:lvl1pPr marL="0"       indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr>'
+				+ '  <a:lvl2pPr marL="457200"  indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl2pPr>'
+				+ '  <a:lvl3pPr marL="914400"  indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl3pPr>'
+				+ '  <a:lvl4pPr marL="1371600" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl4pPr>'
+				+ '  <a:lvl5pPr marL="1828800" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl5pPr>'
+				+ '  <a:lvl6pPr marL="2286000" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl6pPr>'
+				+ '  <a:lvl7pPr marL="2743200" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl7pPr>'
+				+ '  <a:lvl8pPr marL="3200400" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl8pPr>'
+				+ '  <a:lvl9pPr marL="3657600" indent="0" algn="ctr"><a:buNone/><a:defRPr><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl9pPr></a:lstStyle><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master subtitle style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+				+ '<p:cNvPr id="4" name="Date Placeholder 3"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="dt" sz="half" idx="10"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:fld id="{F8166F1F-CE9B-4651-A6AA-CD717754106B}" type="datetimeFigureOut"><a:rPr lang="en-US" smtClean="0"/><a:t>01/01/2016</a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+				+ '<p:cNvPr id="5" name="Footer Placeholder 4"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ftr" sz="quarter" idx="11"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+				+ '<p:cNvPr id="6" name="Slide Number Placeholder 5"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldNum" sz="quarter" idx="12"/></p:nvPr></p:nvSpPr><p:spPr/><p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:fld id="'+SLDNUMFLDID+'" type="slidenum"><a:rPr lang="en-US" smtClean="0"/><a:t></a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp></p:spTree></p:cSld>'
+				+ '<p:clrMapOvr><a:masterClrMapping/></p:clrMapOvr></p:sldLayout>';
 		//
 		return strXml;
 	}
@@ -1953,7 +1953,7 @@ var PptxGenJS = function(){
 	 * Generates the XML slide resource from a Slide object
 	 * @param {Object} inSlide - The slide object to transform into XML
 	 * @return {string} strSlideXml - Slide OOXML
-	 */
+	*/
 	function makeXmlSlide(inSlide) {
 		var intTableNum = 1;
 
@@ -1969,11 +1969,11 @@ var PptxGenJS = function(){
 		if ( inSlide.slide.bkgdImgRid ) {
 			// FIXME: We should be doing this in the slideLayout...
 			strSlideXml += '<p:bg>'
-				+ '<p:bgPr><a:blipFill dpi="0" rotWithShape="1">'
-				+ '<a:blip r:embed="rId'+ inSlide.slide.bkgdImgRid +'"><a:lum/></a:blip>'
-				+ '<a:srcRect/><a:stretch><a:fillRect/></a:stretch></a:blipFill>'
-				+ '<a:effectLst/></p:bgPr>'
-				+ '</p:bg>';
+						+ '<p:bgPr><a:blipFill dpi="0" rotWithShape="1">'
+						+ '<a:blip r:embed="rId'+ inSlide.slide.bkgdImgRid +'"><a:lum/></a:blip>'
+						+ '<a:srcRect/><a:stretch><a:fillRect/></a:stretch></a:blipFill>'
+						+ '<a:effectLst/></p:bgPr>'
+						+ '</p:bg>';
 		}
 
 		// STEP 3: Continue slide by starting spTree node
@@ -2027,20 +2027,20 @@ var PptxGenJS = function(){
 					// STEP 1: Start Table XML =============================
 					// NOTE: Non-numeric cNvPr id values will trigger "presentation needs repair" type warning in MS-PPT-2013
 					var strXml = '<p:graphicFrame>'
-						+ '  <p:nvGraphicFramePr>'
-						+ '    <p:cNvPr id="'+ (intTableNum*inSlide.numb + 1) +'" name="Table '+ (intTableNum*inSlide.numb) +'"/>'
-						+ '    <p:cNvGraphicFramePr><a:graphicFrameLocks noGrp="1"/></p:cNvGraphicFramePr>'
-						+ '    <p:nvPr><p:extLst><p:ext uri="{D42A27DB-BD31-4B8C-83A1-F6EECF244321}"><p14:modId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="1579011935"/></p:ext></p:extLst></p:nvPr>'
-						+ '  </p:nvGraphicFramePr>'
-						+ '  <p:xfrm>'
-						+ '    <a:off  x="'+ (x  || EMU) +'"  y="'+ (y  || EMU) +'"/>'
-						+ '    <a:ext cx="'+ (cx || EMU) +'" cy="'+ (cy || EMU) +'"/>'
-						+ '  </p:xfrm>'
-						+ '  <a:graphic>'
-						+ '    <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">'
-						+ '      <a:tbl>'
-						+ '        <a:tblPr/>';
-					// + '        <a:tblPr bandRow="1"/>';
+							+ '  <p:nvGraphicFramePr>'
+							+ '    <p:cNvPr id="'+ (intTableNum*inSlide.numb + 1) +'" name="Table '+ (intTableNum*inSlide.numb) +'"/>'
+							+ '    <p:cNvGraphicFramePr><a:graphicFrameLocks noGrp="1"/></p:cNvGraphicFramePr>'
+							+ '    <p:nvPr><p:extLst><p:ext uri="{D42A27DB-BD31-4B8C-83A1-F6EECF244321}"><p14:modId xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="1579011935"/></p:ext></p:extLst></p:nvPr>'
+							+ '  </p:nvGraphicFramePr>'
+							+ '  <p:xfrm>'
+							+ '    <a:off  x="'+ (x  || EMU) +'"  y="'+ (y  || EMU) +'"/>'
+							+ '    <a:ext cx="'+ (cx || EMU) +'" cy="'+ (cy || EMU) +'"/>'
+							+ '  </p:xfrm>'
+							+ '  <a:graphic>'
+							+ '    <a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/table">'
+							+ '      <a:tbl>'
+							+ '        <a:tblPr/>';
+							// + '        <a:tblPr bandRow="1"/>';
 
 					// FIXME: Support banded rows, first/last row, etc.
 					// NOTE: Banding, etc. only shows when using a table style! (or set alt row color if banding)
@@ -2078,7 +2078,7 @@ var PptxGenJS = function(){
 						|      |      |  C2  |  D2  |
 						\------|------|------|------/
 					*/
-					$.each(arrTabRows, function(rIdx,row){
+ 					$.each(arrTabRows, function(rIdx,row){
 						// A: Create row if needed (recall one may be created in loop below for rowspans, so dont assume we need to create one each iteration)
 						if ( !objTableGrid[rIdx] ) objTableGrid[rIdx] = {};
 
@@ -2326,12 +2326,12 @@ var PptxGenJS = function(){
 					break;
 
 				case 'image':
-					strSlideXml += '<p:pic>';
+			        strSlideXml += '<p:pic>';
 					strSlideXml += '  <p:nvPicPr>'
 					strSlideXml += '    <p:cNvPr id="'+ (idx + 2) +'" name="Object '+ (idx + 1) +'" descr="'+ slideObj.image +'">';
 					if ( slideObj.hyperlink ) strSlideXml += '<a:hlinkClick r:id="rId'+ slideObj.hyperlink.rId +'" tooltip="'+ (slideObj.hyperlink.tooltip ? decodeXmlEntities(slideObj.hyperlink.tooltip) : '') +'"/>';
 					strSlideXml += '    </p:cNvPr>';
-					strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
+			        strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
 					strSlideXml += '  </p:nvPicPr>';
 					strSlideXml += '<p:blipFill><a:blip r:embed="rId' + slideObj.imageRid + '" cstate="print"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>';
 					strSlideXml += '<p:spPr>'
@@ -2462,11 +2462,11 @@ var PptxGenJS = function(){
 
 	function makeXmlSlideLayoutRel(inSlideNum) {
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF;
-		strXml += '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
-		//?strXml += '  <Relationship Id="rId'+ inSlideNum +'" Target="../slideMasters/slideMaster'+ inSlideNum +'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
-		//strXml += '  <Relationship Id="rId1" Target="../slideMasters/slideMaster'+ inSlideNum +'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
-		strXml += '  <Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
-		strXml += '</Relationships>';
+			strXml += '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+			//?strXml += '  <Relationship Id="rId'+ inSlideNum +'" Target="../slideMasters/slideMaster'+ inSlideNum +'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
+			//strXml += '  <Relationship Id="rId1" Target="../slideMasters/slideMaster'+ inSlideNum +'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
+			strXml += '  <Relationship Id="rId1" Target="../slideMasters/slideMaster1.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster"/>';
+			strXml += '</Relationships>';
 		//
 		return strXml;
 	}
@@ -2518,49 +2518,49 @@ var PptxGenJS = function(){
 	function makeXmlSlideMaster() {
 		var intSlideLayoutId = 2147483649;
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
-			+ '  <p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="2" name="Title Placeholder 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="274638"/><a:ext cx="8229600" cy="1143000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master title style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="3" name="Text Placeholder 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="1600200"/><a:ext cx="8229600" cy="4525963"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:pPr lvl="0"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master text styles</a:t></a:r></a:p><a:p><a:pPr lvl="1"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Second level</a:t></a:r></a:p><a:p><a:pPr lvl="2"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Third level</a:t></a:r></a:p><a:p><a:pPr lvl="3"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Fourth level</a:t></a:r></a:p><a:p><a:pPr lvl="4"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Fifth level</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="4" name="Date Placeholder 3"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="dt" sz="half" idx="2"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="6356350"/><a:ext cx="2133600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="l"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:fld id="{F8166F1F-CE9B-4651-A6AA-CD717754106B}" type="datetimeFigureOut"><a:rPr lang="en-US" smtClean="0"/><a:t>12/25/2015</a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="5" name="Footer Placeholder 4"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ftr" sz="quarter" idx="3"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="3124200" y="6356350"/><a:ext cx="2895600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="ctr"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
-			+ '<p:cNvPr id="6" name="Slide Number Placeholder 5"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldNum" sz="quarter" idx="4"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="6553200" y="6356350"/><a:ext cx="2133600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="r"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:fld id="'+SLDNUMFLDID+'" type="slidenum"><a:rPr lang="en-US" smtClean="0"/><a:t></a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp></p:spTree></p:cSld><p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>'
-			+ '<p:sldLayoutIdLst>';
+					+ '<p:sldMaster xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
+					+ '  <p:cSld><p:bg><p:bgRef idx="1001"><a:schemeClr val="bg1"/></p:bgRef></p:bg><p:spTree><p:nvGrpSpPr><p:cNvPr id="1" name=""/><p:cNvGrpSpPr/><p:nvPr/></p:nvGrpSpPr><p:grpSpPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="0" cy="0"/><a:chOff x="0" y="0"/><a:chExt cx="0" cy="0"/></a:xfrm></p:grpSpPr><p:sp><p:nvSpPr>'
+					+ '<p:cNvPr id="2" name="Title Placeholder 1"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="274638"/><a:ext cx="8229600" cy="1143000"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master title style</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+					+ '<p:cNvPr id="3" name="Text Placeholder 2"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="body" idx="1"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="1600200"/><a:ext cx="8229600" cy="4525963"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0"><a:normAutofit/></a:bodyPr><a:lstStyle/><a:p><a:pPr lvl="0"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Click to edit Master text styles</a:t></a:r></a:p><a:p><a:pPr lvl="1"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Second level</a:t></a:r></a:p><a:p><a:pPr lvl="2"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Third level</a:t></a:r></a:p><a:p><a:pPr lvl="3"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Fourth level</a:t></a:r></a:p><a:p><a:pPr lvl="4"/><a:r><a:rPr lang="en-US" smtClean="0"/><a:t>Fifth level</a:t></a:r><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+					+ '<p:cNvPr id="4" name="Date Placeholder 3"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="dt" sz="half" idx="2"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="457200" y="6356350"/><a:ext cx="2133600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="l"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:fld id="{F8166F1F-CE9B-4651-A6AA-CD717754106B}" type="datetimeFigureOut"><a:rPr lang="en-US" smtClean="0"/><a:t>12/25/2015</a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+					+ '<p:cNvPr id="5" name="Footer Placeholder 4"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="ftr" sz="quarter" idx="3"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="3124200" y="6356350"/><a:ext cx="2895600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="ctr"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp><p:sp><p:nvSpPr>'
+					+ '<p:cNvPr id="6" name="Slide Number Placeholder 5"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr><p:nvPr><p:ph type="sldNum" sz="quarter" idx="4"/></p:nvPr></p:nvSpPr><p:spPr><a:xfrm><a:off x="6553200" y="6356350"/><a:ext cx="2133600" cy="365125"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></p:spPr><p:txBody><a:bodyPr vert="horz" lIns="91440" tIns="45720" rIns="91440" bIns="45720" rtlCol="0" anchor="ctr"/><a:lstStyle><a:lvl1pPr algn="r"><a:defRPr sz="1200"><a:solidFill><a:schemeClr val="tx1"><a:tint val="75000"/></a:schemeClr></a:solidFill></a:defRPr></a:lvl1pPr></a:lstStyle><a:p><a:fld id="'+SLDNUMFLDID+'" type="slidenum"><a:rPr lang="en-US" smtClean="0"/><a:t></a:t></a:fld><a:endParaRPr lang="en-US"/></a:p></p:txBody></p:sp></p:spTree></p:cSld><p:clrMap bg1="lt1" tx1="dk1" bg2="lt2" tx2="dk2" accent1="accent1" accent2="accent2" accent3="accent3" accent4="accent4" accent5="accent5" accent6="accent6" hlink="hlink" folHlink="folHlink"/>'
+					+ '<p:sldLayoutIdLst>';
 		// Create a sldLayout for each SLIDE
 		for ( var idx=1; idx<=gObjPptx.slides.length; idx++ ) {
 			strXml += ' <p:sldLayoutId id="'+ intSlideLayoutId +'" r:id="rId'+ idx +'"/>';
 			intSlideLayoutId++;
 		}
 		strXml += '</p:sldLayoutIdLst>'
-			+ '<p:txStyles>'
-			+ ' <p:titleStyle>'
-			+ '  <a:lvl1pPr algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="0"/></a:spcBef><a:buNone/><a:defRPr sz="4400" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mj-lt"/><a:ea typeface="+mj-ea"/><a:cs typeface="+mj-cs"/></a:defRPr></a:lvl1pPr>'
-			+ ' </p:titleStyle>'
-			+ ' <p:bodyStyle>'
-			+ '  <a:lvl1pPr marL="342900" indent="-342900" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="3200" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl1pPr>'
-			+ '  <a:lvl2pPr marL="742950" indent="-285750" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl2pPr>'
-			+ '  <a:lvl3pPr marL="1143000" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2400" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl3pPr>'
-			+ '  <a:lvl4pPr marL="1600200" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl4pPr>'
-			+ '  <a:lvl5pPr marL="2057400" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl5pPr>'
-			+ '  <a:lvl6pPr marL="2514600" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl6pPr>'
-			+ '  <a:lvl7pPr marL="2971800" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl7pPr>'
-			+ '  <a:lvl8pPr marL="3429000" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl8pPr>'
-			+ '  <a:lvl9pPr marL="3886200" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl9pPr>'
-			+ ' </p:bodyStyle>'
-			+ ' <p:otherStyle>'
-			+ '  <a:defPPr><a:defRPr lang="en-US"/></a:defPPr>'
-			+ '  <a:lvl1pPr marL="0" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl1pPr>'
-			+ '  <a:lvl2pPr marL="457200" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl2pPr>'
-			+ '  <a:lvl3pPr marL="914400" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl3pPr>'
-			+ '  <a:lvl4pPr marL="1371600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl4pPr>'
-			+ '  <a:lvl5pPr marL="1828800" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl5pPr>'
-			+ '  <a:lvl6pPr marL="2286000" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl6pPr>'
-			+ '  <a:lvl7pPr marL="2743200" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl7pPr>'
-			+ '  <a:lvl8pPr marL="3200400" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl8pPr>'
-			+ '  <a:lvl9pPr marL="3657600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl9pPr>'
-			+ ' </p:otherStyle>'
-			+ '</p:txStyles>'
-			+ '</p:sldMaster>';
+					+ '<p:txStyles>'
+					+ ' <p:titleStyle>'
+					+ '  <a:lvl1pPr algn="ctr" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="0"/></a:spcBef><a:buNone/><a:defRPr sz="4400" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mj-lt"/><a:ea typeface="+mj-ea"/><a:cs typeface="+mj-cs"/></a:defRPr></a:lvl1pPr>'
+					+ ' </p:titleStyle>'
+					+ ' <p:bodyStyle>'
+					+ '  <a:lvl1pPr marL="342900" indent="-342900" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="3200" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl1pPr>'
+					+ '  <a:lvl2pPr marL="742950" indent="-285750" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl2pPr>'
+					+ '  <a:lvl3pPr marL="1143000" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2400" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl3pPr>'
+					+ '  <a:lvl4pPr marL="1600200" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl4pPr>'
+					+ '  <a:lvl5pPr marL="2057400" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl5pPr>'
+					+ '  <a:lvl6pPr marL="2514600" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl6pPr>'
+					+ '  <a:lvl7pPr marL="2971800" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl7pPr>'
+					+ '  <a:lvl8pPr marL="3429000" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl8pPr>'
+					+ '  <a:lvl9pPr marL="3886200" indent="-228600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:spcBef><a:spcPct val="20000"/></a:spcBef><a:buFont typeface="Arial" pitchFamily="34" charset="0"/><a:buChar char="?"/><a:defRPr sz="2000" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl9pPr>'
+					+ ' </p:bodyStyle>'
+					+ ' <p:otherStyle>'
+					+ '  <a:defPPr><a:defRPr lang="en-US"/></a:defPPr>'
+					+ '  <a:lvl1pPr marL="0" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl1pPr>'
+					+ '  <a:lvl2pPr marL="457200" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl2pPr>'
+					+ '  <a:lvl3pPr marL="914400" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl3pPr>'
+					+ '  <a:lvl4pPr marL="1371600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl4pPr>'
+					+ '  <a:lvl5pPr marL="1828800" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl5pPr>'
+					+ '  <a:lvl6pPr marL="2286000" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl6pPr>'
+					+ '  <a:lvl7pPr marL="2743200" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl7pPr>'
+					+ '  <a:lvl8pPr marL="3200400" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl8pPr>'
+					+ '  <a:lvl9pPr marL="3657600" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1"><a:defRPr sz="1800" kern="1200"><a:solidFill><a:schemeClr val="tx1"/></a:solidFill><a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/></a:defRPr></a:lvl9pPr>'
+					+ ' </p:otherStyle>'
+					+ '</p:txStyles>'
+					+ '</p:sldMaster>';
 		//
 		return strXml;
 	}
@@ -2568,7 +2568,7 @@ var PptxGenJS = function(){
 	function makeXmlSlideMasterRel() {
 		// FIXME: create a slideLayout for each SLDIE
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
+					+ '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">';
 		for ( var idx=1; idx<=gObjPptx.slides.length; idx++ ) {
 			strXml += '  <Relationship Id="rId'+ idx +'" Target="../slideLayouts/slideLayout'+ idx +'.xml" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout"/>';
 		}
@@ -2612,60 +2612,60 @@ var PptxGenJS = function(){
 
 		// STEP 2: Build SLIDE text styles
 		strXml += '<p:sldSz cx="'+ gObjPptx.pptLayout.width +'" cy="'+ gObjPptx.pptLayout.height +'" type="'+ gObjPptx.pptLayout.name +'"/>'
-			+ '<p:notesSz cx="'+ gObjPptx.pptLayout.height +'" cy="' + gObjPptx.pptLayout.width + '"/>'
-			+ '<p:defaultTextStyle>';
-		+ '  <a:defPPr><a:defRPr lang="en-US"/></a:defPPr>';
+				+ '<p:notesSz cx="'+ gObjPptx.pptLayout.height +'" cy="' + gObjPptx.pptLayout.width + '"/>'
+				+ '<p:defaultTextStyle>';
+				+ '  <a:defPPr><a:defRPr lang="en-US"/></a:defPPr>';
 		for ( var idx=1; idx<10; idx++ ) {
 			strXml += '  <a:lvl' + idx + 'pPr marL="' + intCurPos + '" algn="l" defTabSz="914400" rtl="0" eaLnBrk="1" latinLnBrk="0" hangingPunct="1">'
-				+ '    <a:defRPr sz="1800" kern="1200">'
-				+ '      <a:solidFill><a:schemeClr val="tx1"/></a:solidFill>'
-				+ '      <a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/>'
-				+ '    </a:defRPr>'
-				+ '  </a:lvl' + idx + 'pPr>';
+					+ '    <a:defRPr sz="1800" kern="1200">'
+					+ '      <a:solidFill><a:schemeClr val="tx1"/></a:solidFill>'
+					+ '      <a:latin typeface="+mn-lt"/><a:ea typeface="+mn-ea"/><a:cs typeface="+mn-cs"/>'
+					+ '    </a:defRPr>'
+					+ '  </a:lvl' + idx + 'pPr>';
 			intCurPos += 457200;
 		}
 		strXml += '</p:defaultTextStyle>';
 
 		strXml += '<p:extLst><p:ext uri="{EFAFB233-063F-42B5-8137-9DF3F51BA10A}"><p15:sldGuideLst xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main"/></p:ext></p:extLst>'
-			+ '</p:presentation>';
+				+ '</p:presentation>';
 
 		return strXml;
 	}
 
 	function makeXmlPresProps() {
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<p:presentationPr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
-			+ '  <p:extLst>'
-			+ '    <p:ext uri="{E76CE94A-603C-4142-B9EB-6D1370010A27}"><p14:discardImageEditData xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="0"/></p:ext>'
-			+ '    <p:ext uri="{D31A062A-798A-4329-ABDD-BBA856620510}"><p14:defaultImageDpi xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="220"/></p:ext>'
-			+ '    <p:ext uri="{FD5EFAAD-0ECE-453E-9831-46B23BE46B34}"><p15:chartTrackingRefBased xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main" val="1"/></p:ext>'
-			+ '  </p:extLst>'
-			+ '</p:presentationPr>';
+					+ '<p:presentationPr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
+					+ '  <p:extLst>'
+					+ '    <p:ext uri="{E76CE94A-603C-4142-B9EB-6D1370010A27}"><p14:discardImageEditData xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="0"/></p:ext>'
+					+ '    <p:ext uri="{D31A062A-798A-4329-ABDD-BBA856620510}"><p14:defaultImageDpi xmlns:p14="http://schemas.microsoft.com/office/powerpoint/2010/main" val="220"/></p:ext>'
+					+ '    <p:ext uri="{FD5EFAAD-0ECE-453E-9831-46B23BE46B34}"><p15:chartTrackingRefBased xmlns:p15="http://schemas.microsoft.com/office/powerpoint/2012/main" val="1"/></p:ext>'
+					+ '  </p:extLst>'
+					+ '</p:presentationPr>';
 		return strXml;
 	}
 
 	function makeXmlTableStyles() {
 		// SEE: http://openxmldeveloper.org/discussions/formats/f/13/p/2398/8107.aspx
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}"/>';
+					+ '<a:tblStyleLst xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" def="{5C22544A-7EE6-4342-B048-85BDC9FD1C3A}"/>';
 		return strXml;
 	}
 
 	function makeXmlViewProps() {
 		var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'+CRLF
-			+ '<p:viewPr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
-			+ '<p:normalViewPr><p:restoredLeft sz="15620"/><p:restoredTop sz="94660"/></p:normalViewPr>'
-			+ '<p:slideViewPr>'
-			+ '  <p:cSldViewPr>'
-			+ '    <p:cViewPr varScale="1"><p:scale><a:sx n="64" d="100"/><a:sy n="64" d="100"/></p:scale><p:origin x="-1392" y="-96"/></p:cViewPr>'
-			+ '    <p:guideLst><p:guide orient="horz" pos="2160"/><p:guide pos="2880"/></p:guideLst>'
-			+ '  </p:cSldViewPr>'
-			+ '</p:slideViewPr>'
-			+ '<p:notesTextViewPr>'
-			+ '  <p:cViewPr><p:scale><a:sx n="100" d="100"/><a:sy n="100" d="100"/></p:scale><p:origin x="0" y="0"/></p:cViewPr>'
-			+ '</p:notesTextViewPr>'
-			+ '<p:gridSpacing cx="78028800" cy="78028800"/>'
-			+ '</p:viewPr>';
+					+ '<p:viewPr xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main">'
+					+ '<p:normalViewPr><p:restoredLeft sz="15620"/><p:restoredTop sz="94660"/></p:normalViewPr>'
+					+ '<p:slideViewPr>'
+					+ '  <p:cSldViewPr>'
+					+ '    <p:cViewPr varScale="1"><p:scale><a:sx n="64" d="100"/><a:sy n="64" d="100"/></p:scale><p:origin x="-1392" y="-96"/></p:cViewPr>'
+					+ '    <p:guideLst><p:guide orient="horz" pos="2160"/><p:guide pos="2880"/></p:guideLst>'
+					+ '  </p:cSldViewPr>'
+					+ '</p:slideViewPr>'
+					+ '<p:notesTextViewPr>'
+					+ '  <p:cViewPr><p:scale><a:sx n="100" d="100"/><a:sy n="100" d="100"/></p:scale><p:origin x="0" y="0"/></p:cViewPr>'
+					+ '</p:notesTextViewPr>'
+					+ '<p:gridSpacing cx="78028800" cy="78028800"/>'
+					+ '</p:viewPr>';
 		return strXml;
 	}
 
@@ -2945,6 +2945,7 @@ var PptxGenJS = function(){
 			options.dataLabelFormatCode = ( options.dataLabelFormatCode && typeof options.dataLabelFormatCode === 'string' ? options.dataLabelFormatCode : (options.type == 'pie' ? '0%' : '#,##0') );
 			//
 			options.lineSize = ( typeof options.lineSize === 'number' ? options.lineSize : 2 );
+			options.valAxisMajorUnit = ( typeof options.valAxisMajorUnit === 'number' ? options.valAxisMajorUnit : null );
 
 			// STEP 4: Set props
 			gObjPptx.slides[slideNum].data[slideObjNum] = {};
@@ -3136,7 +3137,7 @@ var PptxGenJS = function(){
 			else {
 				// Audio/Video files consume *TWO* rId's:
 				// <Relationship Id="rId2" Target="../media/media1.mov" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/video"/>
-				// <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
+			    // <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
 				slideObjRels.push({
 					path: (strPath || 'preencoded'+strExtn),
 					type: strType+'/'+strExtn,
@@ -3345,7 +3346,7 @@ var PptxGenJS = function(){
 				// OPT: `type`
 				if ( opt.shadow.type != 'outer' && opt.shadow.type != 'inner' ) {
 					console.warn('Warning: shadow.type options are `outer` or `inner`.');
-					opt.type = 'outer';
+					opt.shadow.type = 'outer';
 				}
 
 				// OPT: `angle`
@@ -3357,7 +3358,7 @@ var PptxGenJS = function(){
 					}
 
 					// B: ROBUST: Cast any type of valid arg to int: '12', 12.3, etc. -> 12
-					opt.angle = Math.round(Number(opt.shadow.angle));
+					opt.shadow.angle = Math.round(Number(opt.shadow.angle));
 				}
 
 				// OPT: `opacity`
@@ -3369,7 +3370,7 @@ var PptxGenJS = function(){
 					}
 
 					// B: ROBUST: Cast any type of valid arg to int: '12', 12.3, etc. -> 12
-					opt.opacity = Number(opt.shadow.opacity)
+					opt.shadow.opacity = Number(opt.shadow.opacity)
 				}
 			}
 
