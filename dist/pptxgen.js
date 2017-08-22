@@ -1007,17 +1007,17 @@ var PptxGenJS = function(){
 				// A: "Series" block for every data row
 				/* EX:
 					data: [
-					 {
-					   name: 'Region 1',
-					   labels: ['April', 'May', 'June', 'July'],
-					   values: [17, 26, 53, 96]
-					 },
-					 {
-					   name: 'Region 2',
-					   labels: ['April', 'May', 'June', 'July'],
-					   values: [55, 43, 70, 58]
-					 }
-					]
+				     {
+				       name: 'Region 1',
+				       labels: ['April', 'May', 'June', 'July'],
+				       values: [17, 26, 53, 96]
+				     },
+				     {
+				       name: 'Region 2',
+				       labels: ['April', 'May', 'June', 'July'],
+				       values: [55, 43, 70, 58]
+				     }
+				    ]
 				*/
 				rel.data.forEach(function(obj,idx){
 					strXml += '<c:ser>';
@@ -1061,7 +1061,7 @@ var PptxGenJS = function(){
 						strXml += '  <c:symbol val="'+ rel.opts.lineDataSymbol +'"/>';
 						if ( rel.opts.lineDataSymbolSize ) strXml += '  <c:size val="'+ rel.opts.lineDataSymbolSize +'"/>'; // Defaults to "auto" otherwise (but this is usually too small, so there is a default)
 						strXml += '  <c:spPr>';
-						strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
+	  					strXml += '    <a:solidFill><a:srgbClr val="'+ rel.opts.chartColors[(idx+1 > rel.opts.chartColors.length ? (Math.floor(Math.random() * rel.opts.chartColors.length)) : idx)] +'"/></a:solidFill>';
 						strXml += '    <a:ln w="9525" cap="flat"><a:solidFill><a:srgbClr val="'+ strSerColor +'"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
 						strXml += '    <a:effectLst/>';
 						strXml += '  </c:spPr>';
@@ -1208,8 +1208,8 @@ var PptxGenJS = function(){
 					strXml += ' <c:majorGridlines>\
 								<c:spPr>\
 								  <a:ln w="12700" cap="flat">\
-									<a:solidFill><a:srgbClr val="'+(rel.opts.gridLineColor ? rel.opts.gridLineColor : "888888")+'"/></a:solidFill>\
-									<a:prstDash val="solid"/><a:round/>\
+								    <a:solidFill><a:srgbClr val="'+(rel.opts.gridLineColor ? rel.opts.gridLineColor : "888888")+'"/></a:solidFill>\
+								    <a:prstDash val="solid"/><a:round/>\
 								  </a:ln>\
 								</c:spPr>\
 								</c:majorGridlines>';
@@ -1338,25 +1338,25 @@ var PptxGenJS = function(){
 					strXml += '  </c:dLbl>';
 				});
 				strXml += '<c:numFmt formatCode="'+ rel.opts.dataLabelFormatCode +'" sourceLinked="0"/>\
-					<c:txPr>\
-					  <a:bodyPr/>\
-					  <a:lstStyle/>\
-					  <a:p>\
-						<a:pPr>\
-						  <a:defRPr b="0" i="0" strike="noStrike" sz="1800" u="none">\
-							<a:solidFill><a:srgbClr val="000000"/></a:solidFill><a:latin typeface="Arial"/>\
-						  </a:defRPr>\
-						</a:pPr>\
-					  </a:p>\
-					</c:txPr>\
-					<c:dLblPos val="ctr"/>\
-					<c:showLegendKey val="0"/>\
-					<c:showVal val="0"/>\
-					<c:showCatName val="1"/>\
-					<c:showSerName val="0"/>\
-					<c:showPercent val="1"/>\
-					<c:showBubbleSize val="0"/>\
-					<c:showLeaderLines val="0"/>';
+		            <c:txPr>\
+		              <a:bodyPr/>\
+		              <a:lstStyle/>\
+		              <a:p>\
+		                <a:pPr>\
+		                  <a:defRPr b="0" i="0" strike="noStrike" sz="1800" u="none">\
+		                    <a:solidFill><a:srgbClr val="000000"/></a:solidFill><a:latin typeface="Arial"/>\
+		                  </a:defRPr>\
+		                </a:pPr>\
+		              </a:p>\
+		            </c:txPr>\
+		            <c:dLblPos val="ctr"/>\
+		            <c:showLegendKey val="0"/>\
+		            <c:showVal val="0"/>\
+		            <c:showCatName val="1"/>\
+		            <c:showSerName val="0"/>\
+		            <c:showPercent val="1"/>\
+		            <c:showBubbleSize val="0"/>\
+		            <c:showLeaderLines val="0"/>';
 				strXml += '</c:dLbls>';
 
 				// 2: "Categories"
@@ -1425,7 +1425,7 @@ var PptxGenJS = function(){
 					strXml += '</c:txPr>';
 				}
 				strXml += '</c:legend>';
-		}
+			}
 		}
 
 		strXml += '  <c:plotVisOnly val="1"/>';
@@ -2078,7 +2078,7 @@ var PptxGenJS = function(){
 						|      |      |  C2  |  D2  |
 						\------|------|------|------/
 					*/
-					$.each(arrTabRows, function(rIdx,row){
+ 					$.each(arrTabRows, function(rIdx,row){
 						// A: Create row if needed (recall one may be created in loop below for rowspans, so dont assume we need to create one each iteration)
 						if ( !objTableGrid[rIdx] ) objTableGrid[rIdx] = {};
 
@@ -2326,12 +2326,12 @@ var PptxGenJS = function(){
 					break;
 
 				case 'image':
-					strSlideXml += '<p:pic>';
+			        strSlideXml += '<p:pic>';
 					strSlideXml += '  <p:nvPicPr>'
 					strSlideXml += '    <p:cNvPr id="'+ (idx + 2) +'" name="Object '+ (idx + 1) +'" descr="'+ slideObj.image +'">';
 					if ( slideObj.hyperlink ) strSlideXml += '<a:hlinkClick r:id="rId'+ slideObj.hyperlink.rId +'" tooltip="'+ (slideObj.hyperlink.tooltip ? decodeXmlEntities(slideObj.hyperlink.tooltip) : '') +'"/>';
 					strSlideXml += '    </p:cNvPr>';
-					strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
+			        strSlideXml += '    <p:cNvPicPr><a:picLocks noChangeAspect="1"/></p:cNvPicPr><p:nvPr/>';
 					strSlideXml += '  </p:nvPicPr>';
 					strSlideXml += '<p:blipFill><a:blip r:embed="rId' + slideObj.imageRid + '" cstate="print"/><a:stretch><a:fillRect/></a:stretch></p:blipFill>';
 					strSlideXml += '<p:spPr>'
@@ -3137,7 +3137,7 @@ var PptxGenJS = function(){
 			else {
 				// Audio/Video files consume *TWO* rId's:
 				// <Relationship Id="rId2" Target="../media/media1.mov" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/video"/>
-				// <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
+			    // <Relationship Id="rId3" Target="../media/media1.mov" Type="http://schemas.microsoft.com/office/2007/relationships/media"/>
 				slideObjRels.push({
 					path: (strPath || 'preencoded'+strExtn),
 					type: strType+'/'+strExtn,
