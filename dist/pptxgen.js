@@ -1707,9 +1707,20 @@ var PptxGenJS = function(){
 		strXml += ' <c:majorTickMark val="out"/>';
 		strXml += ' <c:minorTickMark val="none"/>';
 		strXml += ' <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'nextTo' : 'low') +'"/>';
-		strXml += '<c:spPr>';
-		strXml += '  <a:ln w="12700" cap="flat"><a:solidFill><a:srgbClr val="888888"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
-		strXml += '</c:spPr>';
+		strXml += ' <c:spPr>';
+		strXml += '   <a:ln w="12700" cap="flat">';
+		if ( !!opts.valAxisLineShow || typeof opts.valAxisLineShow === 'undefined' ) {
+			strXml += '<a:solidFill>';
+			strXml += '  <a:srgbClr val="'+ (opts.axisLineColor ? opts.axisLineColor : DEF_CHART_GRIDLINE.color) +'"/>';
+			strXml += '</a:solidFill>';
+		}
+		else {
+			strXml += '<a:noFill/>';
+		}
+		strXml += '     <a:prstDash val="solid"/>';
+		strXml += '     <a:round/>';
+		strXml += '   </a:ln>';
+		strXml += ' </c:spPr>';
 		strXml += ' <c:txPr>';
 		strXml += '  <a:bodyPr rot="0"/>';
 		strXml += '  <a:lstStyle/>';
