@@ -1364,20 +1364,23 @@ var PptxGenJS = function(){
 
 					// Color bar chart bars various colors
 					// Allow users with a single data set to pass their own array of colors (check for this using != ours)
-					if ( data.length === 1 && opts.chartColors != BARCHART_COLORS ) {
+					if ( ( data.length === 1 || opts.valueBarColors ) && opts.chartColors != BARCHART_COLORS ) {
 						// Series Data Point colors
 						// This is a template (not actual values), so only do this loop once.
 						obj.values.forEach(function(value,index){
+							console.log('colors', value);
+							var invert = opts.invertedColors ? 0 : 1;
+							var colors = value < 0 && opts.invertedColors ? opts.invertedColors : opts.chartColors;
 							strXml += '  <c:dPt>';
 							strXml += '    <c:idx val="'+index+'"/>';
-							strXml += '    <c:invertIfNegative val="1"/>';
+							strXml += '    <c:invertIfNegative val="'+ invert +'"/>';
 							strXml += '    <c:bubble3D val="0"/>';
 							strXml += '    <c:spPr>';
 							if (opts.lineSize === 0){
 								strXml += '<a:ln><a:noFill/></a:ln>';
 							} else {
 								strXml += '    <a:solidFill>';
-								strXml += '     <a:srgbClr val="' + opts.chartColors[index % opts.chartColors.length] + '"/>';
+								strXml += '     <a:srgbClr val="' + colors[index % colors.length] + '"/>';
 								strXml += '    </a:solidFill>';
 							}
 

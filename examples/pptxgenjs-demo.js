@@ -1013,14 +1013,16 @@ function genSlides_Chart(pptx) {
 				x:0.5, y:0.5, w:'90%', h:'90%',
 				valAxisMaxVal:1,
 				barDir: 'bar',
-				axisLabelFormatCode: '#%',
+				barGrouping: 'stacked',
+				valAxisLabelFormatCode: '#%',
+
 				gridLineColor: 'D8D8D8',
 				axisLineColor: 'D8D8D8',
 				catAxisLineShow: false,
 				valAxisLineShow: false,
-				barGrouping: 'stacked',
 				catAxisLabelPos: 'low',
 				valueBarColors: true,
+
 				//dataLabelPosition: 'outEnd',
 				chartColors: ['0077BF','4E9D2D','ECAA00','5FC4E3','DE4216','154384','7D666A','A3C961','EF907B','9BA0A3'],
 				invertedColors: ['0065A2','428526','C99100','51A7C1','BD3813','123970','6A575A','8BAB52','CB7A69','84888B'],
@@ -1617,12 +1619,12 @@ function genSlides_Chart(pptx) {
 	// slide3();
 	// slide4();
 	// slide5();
-	// slide6();
+	slide6();
 	// slide7();
 	// slide8();
 	// slide9();
 	// slide10();
-	slide11();
+	// slide11();
 	// slide12();
 	// slide13();
 }
