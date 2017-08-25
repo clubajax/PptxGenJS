@@ -1099,7 +1099,9 @@ var PptxGenJS = function(){
 					fontSize: rel.opts.titleFontSize || DEF_FONT_TITLE_SIZE,
 					color: rel.opts.titleColor,
 					fontFace: rel.opts.titleFontFace,
-					rotate: rel.opts.titleRotate
+					rotate: rel.opts.titleRotate,
+					titleAlign: rel.opts.titleAlign,
+					titlePos: rel.opts.titlePos
 				});
 			}
 			if (rel.opts.titlePos) {
@@ -1201,8 +1203,26 @@ var PptxGenJS = function(){
 			strXml += '</c:plotArea>';
 
 			// OPTION: Legend
-			// IMPORTANT: Dont specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
-			if ( rel.opts.showLegend ) strXml += '<c:legend><c:legendPos val="'+ rel.opts.legendPos +'"/><c:layout/><c:overlay val="0"/></c:legend>';
+			// IMPORTANT: Don't specify layout to enable auto-fit: PPT does a great job maximizing space with all 4 TRBL locations
+			if ( rel.opts.showLegend ) {
+				strXml += '<c:legend>';
+				strXml += '<c:legendPos val="' + rel.opts.legendPos + '"/>';
+				strXml += '<c:layout/>';
+				strXml += '<c:overlay val="0"/>';
+				if(rel.opts.legendFontSize){
+					strXml += '<c:txPr>';
+					strXml += '  <a:bodyPr/>';
+					strXml += '  <a:lstStyle/>';
+					strXml += '  <a:p>';
+					strXml += '  <a:pPr>';
+					strXml += '    <a:defRPr sz="'+(Number(rel.opts.legendFontSize) * 100)+'"/>';
+					strXml += '    </a:pPr>';
+					strXml += '    <a:endParaRPr lang="en-US"/>';
+					strXml += '  </a:p>';
+					strXml += '</c:txPr>';
+				}
+				strXml += '</c:legend>';
+			}
 		}
 
 		strXml += '  <c:plotVisOnly val="1"/>';
@@ -1709,6 +1729,7 @@ var PptxGenJS = function(){
 	* DESC: Generate the XML for title elements used for the char and axis titles
 	*/
 	function genXmlTitle(opts) {
+		var align = opts.titleAlign == 'left' ? 'l' : opts.titleAlign == 'right' ? 'r' : false;
 		var strXml = '';
 		strXml += '<c:title>';
 		strXml += ' <c:tx>';
@@ -1721,7 +1742,11 @@ var PptxGenJS = function(){
 		}
 		strXml += '  <a:lstStyle/>';
 		strXml += '  <a:p>';
-		strXml += '    <a:pPr>';
+		if(align) {
+			strXml += '    <a:pPr algn="' + align + '">';
+		} else {
+			strXml += '    <a:pPr>';
+		}
 		var sizeAttr = '';
 		// only set the font size if specified.  Powerpoint will handle the default size
 		if (opts.fontSize !== undefined) {
@@ -1742,7 +1767,18 @@ var PptxGenJS = function(){
 		strXml += '  </a:p>';
 		strXml += '  </c:rich>';
 		strXml += ' </c:tx>';
-		strXml += ' <c:layout/>';
+		if (opts.titlePos) {
+			strXml += '<c:layout>';
+			strXml += '  <c:manualLayout>';
+			strXml += '    <c:xMode val="edge"/>';
+			strXml += '    <c:yMode val="edge"/>';
+			strXml += '    <c:x val="'+ opts.titlePos.x +'"/>';
+			strXml += '    <c:y val="'+ opts.titlePos.y +'"/>';
+			strXml += '  </c:manualLayout>';
+			strXml += '</c:layout>';
+		} else {
+			strXml += ' <c:layout/>';
+		}
 		strXml += ' <c:overlay val="0"/>';
 		strXml += '</c:title>';
 		return strXml;
