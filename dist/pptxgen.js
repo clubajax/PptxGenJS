@@ -1086,7 +1086,6 @@ var PptxGenJS = function(){
 
 		// STEP 1: Create chart
 
-		{
 			var strXml = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';
 			// CHARTSPACE: BEGIN vvv
 			strXml += '<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">';
@@ -1103,20 +1102,6 @@ var PptxGenJS = function(){
 					titleAlign: rel.opts.titleAlign,
 					titlePos: rel.opts.titlePos
 				});
-			}
-			if (rel.opts.titlePos) {
-				strXml += '<c:layout>';
-				strXml += '  <c:manualLayout>';
-				strXml += '    <c:xMode val="edge"/>';
-				strXml += '    <c:yMode val="edge"/>';
-				strXml += '    <c:x val="' + rel.opts.titlePos.x + '"/>';
-				strXml += '    <c:y val="' + rel.opts.titlePos.y + '"/>';
-				strXml += '  </c:manualLayout>';
-				strXml += '</c:layout>';
-			} else {
-				//
-			}
-				strXml += '<c:autoTitleDeleted val="0"/>';
 			}
 
 			strXml += '<c:plotArea>';
@@ -1642,7 +1627,6 @@ var PptxGenJS = function(){
 		strXml += '  <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
 		strXml += '  <c:spPr>';
 		strXml += '   <a:ln w="12700" cap="flat">';
-		console.log('opts', opts);
 		if ( !!opts.catAxisLineShow || typeof opts.catAxisLineShow === 'undefined' ) {
 			strXml += '<a:solidFill>';
 			strXml += '  <a:srgbClr val="'+ (opts.axisLineColor ? opts.axisLineColor : DEF_CHART_GRIDLINE.color) +'"/>';
