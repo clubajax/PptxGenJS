@@ -1368,7 +1368,6 @@ var PptxGenJS = function(){
 						// Series Data Point colors
 						// This is a template (not actual values), so only do this loop once.
 						obj.values.forEach(function(value,index){
-							console.log('colors', value);
 							var invert = opts.invertedColors ? 0 : 1;
 							var colors = value < 0 && opts.invertedColors ? opts.invertedColors : opts.chartColors;
 							strXml += '  <c:dPt>';
@@ -1642,7 +1641,19 @@ var PptxGenJS = function(){
 		strXml += '  <c:minorTickMark val="none"/>';
 		strXml += '  <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
 		strXml += '  <c:spPr>';
-		strXml += '    <a:ln w="12700" cap="flat"><a:solidFill><a:srgbClr val="888888"/></a:solidFill><a:prstDash val="solid"/><a:round/></a:ln>';
+		strXml += '   <a:ln w="12700" cap="flat">';
+		console.log('opts', opts);
+		if ( !!opts.catAxisLineShow || typeof opts.catAxisLineShow === 'undefined' ) {
+			strXml += '<a:solidFill>';
+			strXml += '  <a:srgbClr val="'+ (opts.axisLineColor ? opts.axisLineColor : DEF_CHART_GRIDLINE.color) +'"/>';
+			strXml += '</a:solidFill>';
+		}
+		else {
+			strXml += '<a:noFill/>';
+		}
+		strXml += '     <a:prstDash val="solid"/>';
+		strXml += '     <a:round/>';
+		strXml += '   </a:ln>';
 		strXml += '  </c:spPr>';
 		strXml += '  <c:txPr>';
 		strXml += '    <a:bodyPr rot="0"/>';
