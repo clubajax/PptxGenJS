@@ -1451,17 +1451,15 @@ function genSlides_Chart(pptx) {
 						name: 'Bottom',
 						labels: labels,
 						values: [17, 26, 53, 10, 4]
-					},
-						{
-							name: 'Middle',
-							labels: labels,
-							values: [55, 40, 20, 30, 15]
-						},
-				{
-							name: 'Top',
-							labels: labels,
-							values: [10, 22, 25, 35, 70]
-						}],
+					}, {
+						name: 'Middle',
+						labels: labels,
+						values: [55, 40, 20, 30, 15]
+					}, {
+						name: 'Top',
+						labels: labels,
+						values: [10, 22, 25, 35, 70]
+					}],
 					options: {
 						barGrouping: 'stacked'
 					}
