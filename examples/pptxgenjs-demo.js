@@ -1,12 +1,12 @@
 /**
-* NAME: pptxgenjs-demo.js
-* AUTH: Brent Ely (https://github.com/gitbrent/)
+ * NAME: pptxgenjs-demo.js
+ * AUTH: Brent Ely (https://github.com/gitbrent/)
  * DATE: Aug 23, 2017
-* DESC: Common test/demo slides for all library features
-* DEPS: Loaded by `pptxgenjs-demo.js` and `nodejs-demo.js`
-*/
+ * DESC: Common test/demo slides for all library features
+ * DEPS: Loaded by `pptxgenjs-demo.js` and `nodejs-demo.js`
+ */
 
-// Detect Node.js
+	// Detect Node.js
 var NODEJS = ( typeof module !== 'undefined' && module.exports );
 // Constants
 var CUST_NAME = 'S.T.A.R. Laboratories';
@@ -69,8 +69,8 @@ function execGenSlidesFuncs(type) {
 		var fs = require('fs');
 		if (fs.existsSync('../dist/pptxgen.js')) {
 			pptx = require('../dist/pptxgen.js'); // for LOCAL TESTING
-	}
-	else {
+		}
+		else {
 			pptx = require("pptxgenjs");
 		}
 	}
@@ -190,7 +190,7 @@ function genSlides_Table(pptx) {
 		var tabOpts1 = { x:0.5, y:1.1, w:'90%', h:2, fill:'F5F5F5', color:'3D3D3D', font_size:16, border:{pt:4, color:'FFFFFF'}, align:'c', valign:'m' };
 		var arrTabRows1 = [
 			[
-				 { text:'A1\nA2', options:{rowspan:2, fill:'99FFCC'} }
+				{ text:'A1\nA2', options:{rowspan:2, fill:'99FFCC'} }
 				,{ text:'B1' }
 				,{ text:'C1 -> D1', options:{colspan:2, fill:'99FFCC'} }
 				,{ text:'E1' }
@@ -399,9 +399,9 @@ function genSlides_Table(pptx) {
 		slide.addTable(
 			[
 				{ text:[
-						{ text:'I am a text object with bullets ', options:{color:'CC0000', bullet:{code:'2605'}} },
-						{ text:'and i am the next text object'   , options:{color:'00CD00', bullet:{code:'25BA'}} },
-						{ text:'Final text object w/ bullet:true', options:{color:'0000AB', bullet:true} }
+					{ text:'I am a text object with bullets ', options:{color:'CC0000', bullet:{code:'2605'}} },
+					{ text:'and i am the next text object'   , options:{color:'00CD00', bullet:{code:'25BA'}} },
+					{ text:'Final text object w/ bullet:true', options:{color:'0000AB', bullet:true} }
 				]},
 				{ text:[
 					{ text:'Cell', options:{font_size:36, align:'l', breakLine:true} },
@@ -645,7 +645,7 @@ function genSlides_Chart(pptx) {
 			}
 		];
 		var arrDataHighVals = [
-	{
+			{
 				name  : 'California',
 				labels: ['Apartment', 'Townhome', 'Duplex', 'House', 'Big House'],
 				values: [2000, 2800, 3200, 4000, 5000]
@@ -909,7 +909,7 @@ function genSlides_Chart(pptx) {
 		slide.addChart(
 			pptx.charts.BAR,
 			[
-	{
+				{
 					name  : 'Colored Series',
 					labels: ['Jan', 'Feb','Mar', 'Apr', 'May', 'Jun'],
 					values: [20, 30, 10, 25, 15, 5]
@@ -1059,7 +1059,7 @@ function genSlides_Chart(pptx) {
 		var optsChartLine1 = { x:0.5, y:4.0, w:6.0, h:3.0,
 			chartColors: [ COLOR_RED, COLOR_AMB, COLOR_GRN, COLOR_UNK ],
 			lineDataSymbolSize: 10,
-			lineShadow: 'none',
+			shadow: 'none',
 			showLegend: true, legendPos: 'l'
 		};
 		slide.addChart( pptx.charts.LINE, arrDataLineStat, optsChartLine1 );
@@ -1068,7 +1068,7 @@ function genSlides_Chart(pptx) {
 		var optsChartLine2 = { x:7.0, y:4.0, w:6.0, h:3.0,
 			chartColors: [ COLOR_RED, COLOR_AMB, COLOR_GRN, COLOR_UNK ],
 			lineDataSymbolSize: 20,
-			lineShadow: shadowOpts,
+			shadow: shadowOpts,
 			showLegend: true, legendPos: 'b'
 		};
 		slide.addChart( pptx.charts.LINE, arrDataLineStat, optsChartLine2 );
@@ -1254,7 +1254,11 @@ function genSlides_Chart(pptx) {
 			showPercent: true,
 			showLegend : false,
 			showTitle  : false,
-			title: 'Resource Totals by Location'
+			title: 'Resource Totals by Location',
+			shadow: {
+				offset: 20,
+				blur: 20
+			}
 		};
 		slide.addChart(pptx.charts.DOUGHNUT, dataChartPieLocs, optsChartPie2 );
 	}
@@ -1297,7 +1301,7 @@ function genSlides_Chart(pptx) {
 							labels: labels,
 							values: [55, 40, 20, 30, 15]
 						},
-	{
+						{
 							name: 'Top',
 							labels: labels,
 							values: [10, 22, 25, 35, 70]
@@ -1334,15 +1338,15 @@ function genSlides_Chart(pptx) {
 				valAxisMajorUnit: 10,
 
 				valAxes:[
-				{
+					{
 						showValAxisTitle: true,
 						valAxisTitle: 'Primary Value Axis'
 					}, {
 						showValAxisTitle: true,
 						valAxisTitle: 'Secondary Value Axis',
 						valGridLine: 'none'
-				}
-			],
+					}
+				],
 
 				catAxes: [
 					{
@@ -1408,7 +1412,7 @@ function genSlides_Chart(pptx) {
 				catAxisOrientation: 'minMax',
 				showLegend: false,
 				showTitle: false,
-				valAxisMaxVal:100,
+				valAxisMaxVal: 100,
 				valAxisMinVal: 0,
 				valAxisMajorUnit: 20,
 
@@ -1438,7 +1442,7 @@ function genSlides_Chart(pptx) {
 						catAxisTitle: 'Primary Category Axis'
 					}, {
 						catAxisHidden: true
-			}
+					}
 
 				]
 			};
@@ -1452,14 +1456,14 @@ function genSlides_Chart(pptx) {
 						labels: labels,
 						values: [17, 26, 53, 10, 4]
 					}, {
-						name: 'Middle',
-						labels: labels,
-						values: [55, 40, 20, 30, 15]
+							name: 'Middle',
+							labels: labels,
+							values: [55, 40, 20, 30, 15]
 					}, {
-						name: 'Top',
-						labels: labels,
-						values: [10, 22, 25, 35, 70]
-					}],
+							name: 'Top',
+							labels: labels,
+							values: [10, 22, 25, 35, 70]
+						}],
 					options: {
 						barGrouping: 'stacked'
 					}
@@ -1479,7 +1483,7 @@ function genSlides_Chart(pptx) {
 				}
 			];
 			slide.addChart(chartTypes, opts);
-			}
+		}
 
 		function doBarCol () {
 			// BOT-RGT:
@@ -1497,22 +1501,22 @@ function genSlides_Chart(pptx) {
 				valAxisMinVal: 0,
 				valAxisMajorUnit: 20,
 				valAxes:[{
-					showValAxisTitle: true,
-					valAxisTitle: 'Primary Value Axis'
-				}, {
-					showValAxisTitle: true,
-					valAxisTitle: 'Secondary Value Axis',
-					catAxisOrientation  : 'maxMin',
-					valAxisMajorUnit: 1,
-					valAxisMaxVal: 10,
-					valAxisMinVal: 1,
-					valGridLine: 'none'
-				}
-			],
+						showValAxisTitle: true,
+						valAxisTitle: 'Primary Value Axis'
+					}, {
+						showValAxisTitle: true,
+						valAxisTitle: 'Secondary Value Axis',
+						catAxisOrientation  : 'maxMin',
+						valAxisMajorUnit: 1,
+						valAxisMaxVal: 10,
+						valAxisMinVal: 1,
+						valGridLine: 'none'
+					}
+				],
 			catAxes: [{
-					catAxisTitle: 'Primary Category Axis'
-				}, {
-					catAxisHidden: true
+						catAxisTitle: 'Primary Category Axis'
+					}, {
+						catAxisHidden: true
 				}]
 			};
 
@@ -1525,14 +1529,14 @@ function genSlides_Chart(pptx) {
 						labels: labels,
 						values: [17, 26, 53, 10, 4]
 					}, {
-						name: 'Middle',
-						labels: labels,
-						values: [55, 40, 20, 30, 15]
+							name: 'Middle',
+							labels: labels,
+							values: [55, 40, 20, 30, 15]
 					}, {
-						name: 'Top',
-						labels: labels,
-						values: [10, 22, 25, 35, 70]
-					}],
+							name: 'Top',
+							labels: labels,
+							values: [10, 22, 25, 35, 70]
+						}],
 					options: {
 						barGrouping: 'stacked'
 					}
@@ -1548,7 +1552,7 @@ function genSlides_Chart(pptx) {
 						barGrouping: 'standard',
 						secondaryValAxis: !!opts.valAxes,
 						secondaryCatAxis: !!opts.catAxes
-				}
+					}
 			}];
 			slide.addChart(chartTypes, opts);
 		}
@@ -1586,19 +1590,19 @@ function genSlides_Chart(pptx) {
 				valAxisMinVal: 0,
 				valAxisMajorUnit: 20,
 				valAxes:[{
-					showValAxisTitle: true,
-					valAxisTitle: 'Primary Value Axis'
-				}, {
-					showValAxisTitle: true,
-					valAxisTitle: 'Secondary Value Axis',
-					valAxisMajorUnit: 1,
-					valAxisMaxVal: 10,
-					valAxisMinVal: 1,
-					valGridLine: 'none'
+						showValAxisTitle: true,
+						valAxisTitle: 'Primary Value Axis'
+					}, {
+						showValAxisTitle: true,
+						valAxisTitle: 'Secondary Value Axis',
+						valAxisMajorUnit: 1,
+						valAxisMaxVal: 10,
+						valAxisMinVal: 1,
+						valGridLine: 'none'
 				}],
 				catAxes: [{
-					catAxisTitle: 'Primary Category Axis'
-				}, {
+						catAxisTitle: 'Primary Category Axis'
+					}, {
 						catAxisHidden: true
 				}]
 			};
@@ -1614,6 +1618,114 @@ function genSlides_Chart(pptx) {
 		//readmeExample();
 	}
 
+	function slide14 () {
+		var slide = pptx.addNewSlide();
+		slide.addTable( [ [{ text:'Chart Examples: Charts using shadow options', options:gOptsTitle }] ], { x:0.5, y:0.13, w:12.5 } );
+
+		var arrDataRegions = [{
+			name  : 'Region 2',
+			labels: ['April', 'May', 'June', 'July', 'August'],
+			values: [0, 30, 53, 10, 25]
+		}, {
+			name  : 'Region 3',
+			labels: ['April', 'May', 'June', 'July', 'August'],
+			values: [17, 26, 53, 100, 75]
+		}, {
+			name  : 'Region 4',
+			labels: ['April', 'May', 'June', 'July', 'August'],
+			values: [55, 43, 70, 90, 80]
+		}, {
+			name  : 'Region 5',
+			labels: ['April', 'May', 'June', 'July', 'August'],
+			values: [55, 43, 70, 90, 80]
+		}];
+		var arrDataHighVals = [
+			{
+				name  : 'California',
+				labels: ['Apartment', 'Townhome', 'Duplex', 'House', 'Big House'],
+				values: [2000, 2800, 3200, 4000, 5000]
+			},
+			{
+				name  : 'Texas',
+				labels: ['Apartment', 'Townhome', 'Duplex', 'House', 'Big House'],
+				values: [1400, 2000, 2500, 3000, 3800]
+			}
+		];
+		var single = [{
+			name  : 'Texas',
+			labels: ['Apartment', 'Townhome', 'Duplex', 'House', 'Big House'],
+			values: [1400, 2000, 2500, 3000, 3800]
+		}];
+
+		// TOP-LEFT: H/bar
+		var optsChartBar1 = { x:0.5, y:0.6, w:6.0, h:3.0,
+			showTitle: true,
+			title: 'Large blue shadow',
+			barDir: 'bar',
+			barGrouping: 'standard',
+			dataLabelColor   : 'FFFFFF',
+			showValue        : true,
+			shadow: {
+				type: 'outer',
+				blur: 10,
+				offset: 5,
+				angle: 45,
+				color: '0059B1',
+				opacity: 1
+			}
+		};
+
+		var pieOptions = {x:7.0, y:0.6, w:6.0, h:3.0,
+			showTitle: true,
+			title: 'Rotated cyan shadow',
+			dataLabelColor   : 'FFFFFF',
+			shadow: {
+				type: 'outer',
+				blur: 10,
+				offset: 5,
+				angle: 180,
+				color: '00FFFF',
+				opacity: 1
+			}
+		};
+
+		// BTM-LEFT: H/bar - 100% layout without axis labels
+		var optsChartBar3 = { x:0.5, y:3.8, w:6.0, h:3.5,
+			showTitle: true,
+			title: 'No shadow, transparent colors',
+			barDir     : 'bar',
+			barGrouping: 'stacked',
+			chartColors: ['transparent', '5DA5DA', 'transparent', 'FAA43A'],
+			shadow: 'none'
+		};
+
+		// BTM-RIGHT: V/col - TITLE and LEGEND
+		var optsChartBar4 = { x:7.0, y:3.8, w:6.0, h:3.5,
+			barDir: 'col',
+			barGrouping: 'stacked',
+			showTitle: true,
+			title: 'Red glowing shadow',
+			catAxisLabelColor   : '0000CC',
+			catAxisLabelFontFace: 'Times',
+			catAxisLabelFontSize: 12,
+			catAxisOrientation  : 'minMax',
+			chartColors: ['5DA5DA','FAA43A'],
+			shadow: {
+				type: 'outer',
+				blur: 20,
+				offset: 1,
+				angle: 90,
+				color: 'A70000',
+				opacity: 1
+			}
+		};
+
+		slide.addChart( pptx.charts.BAR, single, optsChartBar1 );
+		slide.addChart( pptx.charts.PIE, dataChartPieStat, pieOptions );
+		slide.addChart( pptx.charts.BAR, arrDataRegions, optsChartBar3 );
+		slide.addChart( pptx.charts.BAR, arrDataHighVals, optsChartBar4 );
+	}
+
 	slide1();
 	slide2();
 	slide3();
@@ -1625,8 +1737,9 @@ function genSlides_Chart(pptx) {
 	slide9();
 	slide10();
 	slide11();
-	slide12();
+ 	slide12();
 	slide13();
+	slide14();
 }
 
 function genSlides_Media(pptx) {
@@ -1816,8 +1929,8 @@ function genSlides_Text(pptx) {
 		slide.addText("Line-Spacing (bullets):", { x:7.5, y:4.45, w:'40%', h:0.38, color:'0088CC' });
 		slide.addText(
 			[
-		      { text:'Line Spacing\n35pt', options:{ font_size:24, bullet:true, color:'99ABCC', lineSpacing:35 } }
-		    ],
+				{ text:'Line Spacing\n35pt', options:{ font_size:24, bullet:true, color:'99ABCC', lineSpacing:35 } }
+			],
 			{ x:7.5, y:4.85, w:5.25, h:1.15, margin:0.1, fill:'f1f1f1' }
 		);
 	}
@@ -1904,7 +2017,7 @@ function genSlides_Text(pptx) {
 				{ text:'Sub'},
 				{ text:'Subscript', options:{ subscript:true } },
 				{ text:' // Super'},
-			    { text:'Superscript', options:{ superscript:true } }
+				{ text:'Superscript', options:{ superscript:true } }
 			],
 			{ x:10, y:5.5 }
 		);
