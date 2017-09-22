@@ -44,13 +44,16 @@ Quickly and easily create PowerPoint presentations with a few simple JavaScript 
   - [Saving a Presentation](#saving-a-presentation)
     - [Client Browser](#client-browser)
     - [Node.js](#nodejs-1)
+    - [Saving Multiple Presentations](#saving-multiple-presentations)
 - [Presentations: Adding Objects](#presentations-adding-objects)
   - [Adding Charts](#adding-charts)
     - [Chart Types](#chart-types)
+    - [Multi-Type Charts](#multi-type-charts)
     - [Chart Size/Formatting Options](#chart-sizeformatting-options)
     - [Chart Axis Options](#chart-axis-options)
     - [Chart Data Options](#chart-data-options)
-    - [Chart Line Shadow Options](#chart-line-shadow-options)
+    - [Chart Element Shadow Options](#chart-element-shadow-options)
+    - [Chart Multi-Type Options](#chart-multi-type-options)
     - [Chart Examples](#chart-examples)
   - [Adding Text](#adding-text)
     - [Text Options](#text-options)
@@ -71,14 +74,14 @@ Quickly and easily create PowerPoint presentations with a few simple JavaScript 
   - [Adding Images](#adding-images)
     - [Image Options](#image-options)
     - [Image Examples](#image-examples)
+    - [Image Sizing](#image-sizing)
   - [Adding Media (Audio/Video/YouTube)](#adding-media-audiovideoyoutube)
     - [Media Options](#media-options)
     - [Media Examples](#media-examples)
 - [Master Slides and Corporate Branding](#master-slides-and-corporate-branding)
   - [Slide Masters](#slide-masters)
-  - [Slide Master Examples](#slide-master-examples)
   - [Slide Master Object Options](#slide-master-object-options)
-  - [Sample Slide Master File](#sample-slide-master-file)
+  - [Slide Master Examples](#slide-master-examples)
 - [Table-to-Slides Feature](#table-to-slides-feature)
   - [Table-to-Slides Options](#table-to-slides-options)
   - [Table-to-Slides HTML Options](#table-to-slides-html-options)
@@ -279,20 +282,26 @@ pptx.save('Demo-Media');
 * Output type can be specified by passing an optional [JSZip output type](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html)
 
 ```javascript
-// A: File will be saved to the local working directory (`__dirname`)
+// Example A: File will be saved to the local working directory (`__dirname`)
 pptx.save( 'Node_Demo' );
-// B: Inline callback function
+
+// Example B: Inline callback function
 pptx.save( 'Node_Demo', function(filename){ console.log('Created: '+filename); } );
-// C: Predefined callback function
+
+// Example C: Predefined callback function
 pptx.save( 'Node_Demo', saveCallback );
-// D: Use a filename of "http" or "https" to receive the powerpoint binary data in your callback
-// Used for streaming the presentation file via http.  See the `nodejs-demo.js` file for a working example.
+
+// Example D: Use a filename of "http" or "https" to receive the powerpoint binary data in your callback
+// (Used for streaming the presentation file via http.  See the `nodejs-demo.js` file for a working example.)
 pptx.save( 'http', streamCallback );
-// E: Save using various JSZip output types: ['arraybuffer', 'base64', 'binarystring', 'blob', 'nodebuffer', 'uint8array']
+
+// Example E: Save using various JSZip output types: ['arraybuffer', 'base64', 'binarystring', 'blob', 'nodebuffer', 'uint8array']
 pptx.save( 'jszip', saveCallback, 'base64' );
 ```
 
-Saving multiple Presentations:  
+### Saving Multiple Presentations
+
+Client-Side:
 * In order to generate a new, unique Presentation just create a new instance of the library then add objects and save as normal.
 
 ```javascript
@@ -306,6 +315,8 @@ pptx.addNewSlide().addText('Presentation 2', {x:1, y:1});
 pptx.save('PptxGenJS-Presentation-2');
 ```
 
+Node.js:
+* Multiple presentations are a bit more complicated in Node - see [Issue #83](https://github.com/gitbrent/PptxGenJS/issues/83)
 
 
 
@@ -329,16 +340,17 @@ slide.addChart({TYPE}, {DATA}, {OPTIONS});
 * Chart type can be any one of `pptx.charts`
 * Currently: `pptx.charts.AREA`, `pptx.charts.BAR`, `pptx.charts.LINE`, `pptx.charts.PIE`, `pptx.charts.DOUGHNUT`
 
-### Multi Chart Types
+### Multi-Type Charts
 * Chart types can be any one of `pptx.charts`, although `pptx.charts.AREA`, `pptx.charts.BAR`, and `pptx.charts.LINE` will give the best results.
 * There should be at least two chart-types. There should always be two value axes and category axes.
 * Multi Charts have a different function signature than standard. There are two parameters:
- * `chartTypes`: array of objects, each with `type`, `data`, and `options` objects.
+ * `chartTypes`: Array of objects, each with `type`, `data`, and `options` objects.
  * `options`: Standard options as used with single charts. Can include axes options.
 * Columns makes the most sense in general. Line charts cannot be rotated to match up with horizontal bars (a PowerPoint limitation). 
 * Can optionally have a secondary value axis.
 * If there is secondary value axis, a secondary category axis is required in order to render, but currently always uses the primary labels. It is recommended to use `catAxisHidden: true` on the secondary category axis.
 * Standard options are used, and the chart-type-options are mixed in to each.
+
 ```javascript
 // Syntax
 slide.addChart({MULTI_TYPES_AND_DATA}, {OPTIONS_AND_AXES});
@@ -356,52 +368,63 @@ slide.addChart({MULTI_TYPES_AND_DATA}, {OPTIONS_AND_AXES});
 | `chartColorsOpacity` | number | percent | `100` | data color opacity percent | 1-100. Ex: `{ chartColorsOpacity:50 }` |
 | `fill`          | string  |         |           | fill/background color | hex color code. Ex: `{ fill:'0088CC' }` |
 | `holeSize`      | number  | percent | `50`      | doughnut hole size    | 1-100. Ex: `{ holeSize:50 }` |
-| `legendFontSize`| number  | points  | `10`      | legend font size      |  1-256. Ex: `{ legendFontSize: 13 }`|
+| `invertedColors`| array   |         |           | data colors for negative numbers   | array of hex color codes. Ex: `['0088CC','FFCC00']` |
+| `legendFontSize`| number  | points  | `10`      | legend font size                   | 1-256. Ex: `{ legendFontSize: 13 }`|
 | `legendPos`     | string  |         | `r`       | chart legend position | `b` (bottom), `tr` (top-right), `l` (left), `r` (right), `t` (top) |
-| `layout`        | object  |         |           | positioning plot within chart area | object with `x`, `y`, `w` and `h` props, all in range 0-1 (proportionally related to the chart size). Ex: `{x: 0, y: 0, w: 1, h: 1}` fully expands plot to the chart area |
-| `legendFontSize`| number  | points  | `10`      | legend font size      |  1-256. Ex: `{ legendFontSize: 13 }`|
+| `layout`        | object  |         |           | positioning plot within chart area | object with `x`, `y`, `w` and `h` props, all in range 0-1 (proportionally related to the chart size). Ex: `{x: 0, y: 0, w: 1, h: 1}` fully expands chart within the plot area |
+| `showDataTable`           | boolean |     | `false`   | show Data Table under the chart     | `true` or `false` (Not available for Pie/Doughnut charts) |
+| `showDataTableKeys`       | boolean |     | `true`    | show Data Table Keys (color blocks) | `true` or `false` (Not available for Pie/Doughnut charts) |
+| `showDataTableHorzBorder` | boolean |     | `true`    | show Data Table horizontal borders  | `true` or `false` (Not available for Pie/Doughnut charts) |
+| `showDataTableVertBorder` | boolean |     | `true`    | show Data Table vertical borders    | `true` or `false` (Not available for Pie/Doughnut charts) |
+| `showDataTableOutline`    | boolean |     | `true`    | show Data Table table outline       | `true` or `false` (Not available for Pie/Doughnut charts) |
 | `showLabel`     | boolean |         | `false`   | show data labels      | `true` or `false` |
 | `showLegend`    | boolean |         | `false`   | show chart legend     | `true` or `false` |
 | `showPercent`   | boolean |         | `false`   | show data percent     | `true` or `false` |
 | `showTitle`     | boolean |         | `false`   | show chart title      | `true` or `false` |
 | `showValue`     | boolean |         | `false`   | show data values      | `true` or `false` |
 | `title`         | string  |         |           | chart title           | a string. Ex: `{ title:'Sales by Region' }` |
-| `titleAlign`    | string  |         | `center`  | chart text align      | `left` `center` or `right` Ex: `{ titleAlign:'left' }` |
+| `titleAlign`    | string  |         | `center`  | chart title text align             | `left` `center` or `right` Ex: `{ titleAlign:'left' }` |
 | `titleColor`    | string  |         | `000000`  | title color           | hex color code. Ex: `{ titleColor:'0088CC' }` |
 | `titleFontFace` | string  |         | `Arial`   | font face             | font name. Ex: `{ titleFontFace:'Arial' }` |
 | `titleFontSize` | number  | points  | `18`      | font size             | 1-256. Ex: `{ titleFontSize:12 }` |
-| `titlePos`      | object  |         |           | title position        | object with x and y values. Ex: `{ titlePos:{x: 0, y: 10} }` |
+| `titlePos`      | object  |         |           | title position                     | object with x and y values. Ex: `{ titlePos:{x: 0, y: 10} }` |
 | `titleRotate`   | integer | degrees |           | title rotation degrees             | 0-360. Ex: `{ titleRotate:45 }` |
 | `titlePos`      | object  |         |           | title position        | object with x and y values. Ex: `{ titlePos:{x: 0, y: 10} }` |
 
 ### Chart Axis Options
-| Option                 | Type    | Unit    | Default   | Description             | Possible Values                            |
-| :--------------------- | :------ | :------ | :----------- | :--------------------------- | :----------------------------------------- |
+| Option                 | Type    | Unit    | Default   | Description              | Possible Values                            |
+| :--------------------- | :------ | :------ | :----------- | :---------------------------- | :----------------------------------------------- |
 | `axisLineColor`        | string  |         | `000000`     | cat/val axis line color      | hex color code. Ex: `{ axisLineColor:'0088CC' }`     |
+| `catAxisBaseTimeUnit`  | string  |         |              | category-axis base time unit  | `days` `months` or `years` |
 | `catAxisHidden`        | boolean |         | `false`   | hide category-axis       | `true` or `false`   |
-| `catAxisLabelColor`    | string  |         | `000000`  | category-axis color     | hex color code. Ex: `{ catAxisLabelColor:'0088CC' }`   |
-| `catAxisLabelFontFace` | string  |         | `Arial`   | category-axis font face | font name. Ex: `{ titleFontFace:'Arial' }` |
-| `catAxisLabelFontSize` | number  | points  | `18`      | category-axis font size | 1-256. Ex: `{ titleFontSize:12 }`          |
+| `catAxisLabelColor`    | string  |         | `000000`  | category-axis color      | hex color code. Ex: `{ catAxisLabelColor:'0088CC' }`   |
+| `catAxisLabelFontFace` | string  |         | `Arial`   | category-axis font face  | font name. Ex: `{ titleFontFace:'Arial' }` |
+| `catAxisLabelFontSize` | integer | points  | `18`         | category-axis font size       | 1-256. Ex: `{ titleFontSize:12 }`          |
+| `catAxisLabelFrequency`| integer |         |              | PPT "Interval Between Labels" | 1-n. Ex: `{ catAxisLabelFrequency: 2 }`          |
 | `catAxisLineShow`      | boolean |         | true         | show/hide category-axis line | `true` or `false` |
+| `catAxisMajorTimeUnit` | string  |         |              | category-axis major time unit | `days` `months` or `years` |
+| `catAxisMinorTimeUnit` | string  |         |              | category-axis minor time unit | `days` `months` or `years` |
+| `catAxisMajorUnit`     | integer |         |              | category-axis major unit      | Positive integer. Ex: `{ catAxisMajorUnit:12 }`   |
+| `catAxisMinorUnit`     | integer |         |              | category-axis minor unit      | Positive integer. Ex: `{ catAxisMinorUnit:1 }`   |
 | `catAxisOrientation`   | string  |         | `minMax`  | category-axis orientation | `maxMin` (high->low) or `minMax` (low->high) |
 | `catAxisTitle`         | string  |         | `Axis Title` | axis title   | a string. Ex: `{ catAxisTitle:'Regions' }` |
 | `catAxisTitleColor`    | string  |         | `000000`     | title color           | hex color code. Ex: `{ catAxisTitleColor:'0088CC' }` |
 | `catAxisTitleFontFace` | string  |         | `Arial`      | font face             | font name. Ex: `{ catAxisTitleFontFace:'Arial' }` |
-| `catAxisTitleFontSize` | number  | points  |              | font size    | 1-256. Ex: `{ catAxisTitleFontSize:12 }` |
+| `catAxisTitleFontSize` | integer | points  |              | font size                     | 1-256. Ex: `{ catAxisTitleFontSize:12 }` |
 | `catAxisTitleRotate`   | integer | degrees |              | title rotation degrees           | 0-360. Ex: `{ catAxisTitleRotate:45 }` |
 | `catGridLine`          | object  |         | `none`    | category grid line style  | object with properties `size` (pt), `color` and `style` (`'solid'`, `'dash'` or `'dot'`) or `'none'` to hide |
 | `showCatAxisTitle`     | boolean |         | `false`      | show category (vert) title   | `true` or `false`.  Ex:`{ showCatAxisTitle:true }` |
 | `showValAxisTitle`     | boolean |         | `false`      | show values (horiz) title    | `true` or `false`.  Ex:`{ showValAxisTitle:true }` |
 | `valAxisHidden`        | boolean |         | `false`   | hide value-axis          | `true` or `false`   |
-| `valAxisLabelColor`    | string  |         | `000000`  | value-axis color        | hex color code. Ex: `{ valAxisLabelColor:'0088CC' }` |
-| `valAxisLabelFontFace` | string  |         | `Arial`   | value-axis font face    | font name. Ex: `{ titleFontFace:'Arial' }`   |
-| `valAxisLabelFontSize` | number  | points  | `18`      | value-axis font size    | 1-256. Ex: `{ titleFontSize:12 }`            |
+| `valAxisLabelColor`    | string  |         | `000000`  | value-axis color         | hex color code. Ex: `{ valAxisLabelColor:'0088CC' }` |
+| `valAxisLabelFontFace` | string  |         | `Arial`   | value-axis font face     | font name. Ex: `{ titleFontFace:'Arial' }`   |
+| `valAxisLabelFontSize` | integer | points  | `18`         | value-axis font size         | 1-256. Ex: `{ titleFontSize:12 }`            |
 | `valAxisLabelFormatCode` | string |        | `General` | value-axis number format | format string. Ex: `{ axisLabelFormatCode:'#,##0' }` [MicroSoft Number Format Codes](https://support.office.com/en-us/article/Number-format-codes-5026bbd6-04bc-48cd-bf33-80f18b4eae68) |
 | `valAxisLineShow`      | boolean |         | true         | show/hide value-axis line    | `true` or `false` |
-| `valAxisMajorUnit`     | number  | float   | `1.0`     | value-axis tick steps    | Float or whole number. Ex: `{ majorUnit:0.2 }`      |
+| `valAxisMajorUnit`     | number  |         | `1.0`        | value-axis tick steps        | Float or whole number. Ex: `{ majorUnit:0.2 }`      |
 | `valAxisMaxVal`        | number  |         |           | value-axis maximum value | 1-N. Ex: `{ valAxisMaxVal:125 }` |
 | `valAxisMinVal`        | number  |         |           | value-axis minimum value | 1-N. Ex: `{ valAxisMinVal: -10 }` |
-| `valAxisOrientation`   | string  |         | `minMax`  | value-axis orientation  | `maxMin` (high->low) or `minMax` (low->high) |
+| `valAxisOrientation`   | string  |         | `minMax`  | value-axis orientation   | `maxMin` (high->low) or `minMax` (low->high) |
 | `valAxisTitle`         | string  |         | `Axis Title` | axis title   | a string. Ex: `{ valAxisTitle:'Sales (USD)' }` |
 | `valAxisTitleColor`    | string  |         | `000000`     | title color           | hex color code. Ex: `{ valAxisTitleColor:'0088CC' }` |
 | `valAxisTitleFontFace` | string  |         | `Arial`      | font face             | font name. Ex: `{ valAxisTitleFontFace:'Arial' }` |
@@ -421,6 +444,7 @@ slide.addChart({MULTI_TYPES_AND_DATA}, {OPTIONS_AND_AXES});
 | `dataLabelFontFace`    | string  |         | `Arial`   | value-axis font face       | font name. Ex: `{ titleFontFace:'Arial' }`   |
 | `dataLabelFontSize`    | number  | points  | `18`      | value-axis font size       | 1-256. Ex: `{ titleFontSize:12 }`            |
 | `dataLabelPosition`    | string  |         | `bestFit` | data label position        | `bestFit`,`b`,`ctr`,`inBase`,`inEnd`,`l`,`outEnd`,`r`,`t` |
+| `dataNoEffects`        | boolean |         | `false`   | whether to omit effects on data | (*Doughnut/Pie Charts*) `true` or `false` |
 | `gridLineColor`        | string  |         | `000000`  | grid line color            | hex color code. Ex: `{ gridLineColor:'0088CC' }`     |
 | `lineDataSymbol`       | string  |         | `circle`  | symbol used on line marker | `circle`,`dash`,`diamond`,`dot`,`none`,`square`,`triangle` |
 | `lineDataSymbolSize`   | number  | points  | `6`       | size of line data symbol   | 1-256. Ex: `{ lineDataSymbolSize:12 }` |
@@ -428,7 +452,7 @@ slide.addChart({MULTI_TYPES_AND_DATA}, {OPTIONS_AND_AXES});
 | `lineDataSymbolLineColor`| number | points  | `0.75`    | size of data symbol outline   | 1-256. Ex: `{ lineDataSymbolLineSize:12 }` |
 | `shadow`               | object  |         |           | data element shadow options   | `'none'` or [shadow options](#chart-element-shadow-options) |
 | `lineSize`             | number  | points  | `2`       | thickness of data line (0 is no line) | 0-256. Ex: `{ lineSize: 1 }` |
-| `valueBarColors`       | boolean |         | `false`   | forces chartColors on multi-data-series   | `true` or `false` |
+| `valueBarColors`       | boolean |         | `false`   | forces chartColors on multi-data-series | `true` or `false` |
 
 ### Chart Element Shadow Options
 | Option       | Type    | Unit    | Default   | Description         | Possible Values                            |
@@ -440,12 +464,13 @@ slide.addChart({MULTI_TYPES_AND_DATA}, {OPTIONS_AND_AXES});
 | `offset`     | number  | points  | `1.8`     | offset size         | 1-256. Ex: `{ offset:2 }`                  |
 | `opacity`    | number  | percent | `0.35`    | opacity             | 0-1. Ex: `{ opacity:0.35 }`                |
 
-### Multi Chart Options
-| :--------------------- | :------ | :------ | :-------- | :------------------------- | :----------------------------------------- |
-| `secondaryValAxis`     | boolean  |        | `false`     | If data should use secondary value axis (or primary)    | `true` or `false` |
-| `secondaryCatAxis`     | boolean  |        | `false`     | If data should use secondary category axis (or primary) | `true` or `false` |
-| `valAxes`     | array  |          |        | array of two axis options objects | See example below |
-| `catAxes`     | array  |          |        | array of two axis options objects | See example below |
+### Chart Multi-Type Options
+| Option             | Type    | Default  | Description                                             | Possible Values   |
+| :----------------- | :------ | :------- | :------------------------------------------------------ | :---------------- |
+| `catAxes`          | array   |          | array of two axis options objects | See example below   |                   |
+| `secondaryCatAxis` | boolean | `false`  | If data should use secondary category axis (or primary) | `true` or `false` |
+| `secondaryValAxis` | boolean | `false`  | If data should use secondary value axis (or primary)    | `true` or `false` |
+| `valAxes`          | array   |          | array of two axis options objects | See example below   |                   |
 
 ### Chart Examples
 ```javascript
@@ -492,8 +517,8 @@ var dataChartPie = [
 ];
 slide.addChart( pptx.charts.PIE, dataChartPie, { x:1.0, y:1.0, w:6, h:6 } );
 
-// Multi Type
-// use the same labels for all types
+// Chart Type: Multi-Type
+// NOTE: use the same labels for all types
 var labels = ['Q1', 'Q2', 'Q3', 'Q4', 'OT'];
 var chartTypes = [
 	{
@@ -503,10 +528,9 @@ var chartTypes = [
 			labels: labels,
 			values: [17, 26, 53, 10, 4]
 		}],
-		options: {
-			barDir: 'col'
-		}
-	}, {
+    options: { barDir: 'col' }
+  },
+  {
 		type: pptx.charts.LINE,
 		data: [{
 			name: 'Current',
@@ -514,7 +538,7 @@ var chartTypes = [
 			values: [5, 3, 2, 4, 7]
 		}],
 		options: {
-			// both required, when using a secondary axis:
+      // NOTE: both are required, when using a secondary axis:
 			secondaryValAxis: true,
 			secondaryCatAxis: true
 		}
@@ -530,7 +554,8 @@ var multiOpts = {
 		{
 			showValAxisTitle: true,
 			valAxisTitle: 'Primary Value Axis'
-		}, {
+    },
+    {
 			showValAxisTitle: true,
 			valAxisTitle: 'Secondary Value Axis',
 			valAxisMajorUnit: 1,
@@ -539,20 +564,12 @@ var multiOpts = {
 			valGridLine: 'none'
 		}
 	],
-	catAxes: [
-		{
-			catAxisTitle: 'Primary Category Axis'
-		}, {
-			catAxisHidden: true
-		}
-	]
+  catAxes: [{ catAxisTitle: 'Primary Category Axis' }, { catAxisHidden: true }]
 };
 
 slide.addChart(chartTypes, multiOpts);
 
 pptx.save('Demo-Chart');
-
-// Chart Multi Type
 ```
 
 
@@ -568,7 +585,7 @@ slide.addText([ {text:'TEXT', options:{OPTIONS}} ]);
 
 ### Text Options
 | Option       | Type    | Unit    | Default   | Description         | Possible Values  |
-| :----------- | :------ | :------ | :-------- | :------------------ | :--------------- |
+| :----------- | :------ | :------ | :-------- | :------------------ | :--------------------------------------------------------------------------------- |
 | `x`          | number  | inches  | `1.0`     | horizontal location | 0-n OR 'n%'. (Ex: `{x:'50%'}` will place object in the middle of the Slide) |
 | `y`          | number  | inches  | `1.0`     | vertical location   | 0-n OR 'n%'. |
 | `w`          | number  | inches  |           | width               | 0-n OR 'n%'. (Ex: `{w:'50%'}` will make object 50% width of the Slide) |
@@ -576,7 +593,7 @@ slide.addText([ {text:'TEXT', options:{OPTIONS}} ]);
 | `align`      | string  |         | `left`    | alignment           | `left` or `center` or `right` |
 | `autoFit`    | boolean |         | `false`   | "Fit to Shape"      | `true` or `false` |
 | `bold`       | boolean |         | `false`   | bold text           | `true` or `false` |
-| `breakLine`  | boolean |         | `false`   | appends a line break | `true` or `false` (only applies when used in text object options) Ex: `{text:'hi', options:{breakLine:true}}` |
+| `breakLine`  | boolean |         | `false`   | appends a line break | `true` or `false` (only applies when used in text options) Ex: `{text:'hi', options:{breakLine:true}}` |
 | `bullet`     | boolean |         | `false`   | bulleted text       | `true` or `false` |
 | `bullet`     | object  |         |           | bullet options (number type or choose any unicode char) | object with `type` or `code`. Ex: `bullet:{type:'number'}`. Ex: `bullet:{code:'2605'}` |
 | `color`      | string  |         |           | text color          | hex color code or [scheme color constant](#scheme-colors). Ex: `{ color:'0088CC' }` |
@@ -588,6 +605,7 @@ slide.addText([ {text:'TEXT', options:{OPTIONS}} ]);
 | `inset`      | number  | inches  |           | inset/padding       | 1-256. Ex: `{ inset:1.25 }` |
 | `isTextBox`  | boolean |         | `false`   | PPT "Textbox"       | `true` or `false` |
 | `italic`     | boolean |         | `false`   | italic text         | `true` or `false` |
+| `lang`       | string  |         | `en-US`   | language setting    | Ex: `{ lang:'zh-TW' }` (Set this when using non-English fonts like Chinese) |
 | `lineSpacing`| number  | points  |           | line spacing points | 1-256. Ex: `{ lineSpacing:28 }` |
 | `margin`     | number  | points  |           | margin              | 0-99 (ProTip: use the same value from CSS `padding`) |
 | `rectRadius` | number  | inches  |           | rounding radius     | rounding radius for `ROUNDED_RECTANGLE` text shapes |
@@ -699,7 +717,7 @@ slide.addTable( [rows], {any Layout/Formatting OPTIONS} );
 
 ### Table Layout Options
 | Option       | Type    | Unit   | Default   | Description            | Possible Values  |
-| :----------- | :------ | :----- | :-------- | :--------------------- | :--------------- |
+| :----------- | :------ | :----- | :-------- | :--------------------- | :-------------------------------------------------------------------------- |
 | `x`          | number  | inches | `1.0`     | horizontal location    | 0-n OR 'n%'. (Ex: `{x:'50%'}` will place object in the middle of the Slide) |
 | `y`          | number  | inches | `1.0`     | vertical location      | 0-n OR 'n%'. |
 | `w`          | number  | inches |           | width                  | 0-n OR 'n%'. (Ex: `{w:'50%'}` will make object 50% width of the Slide) |
@@ -711,8 +729,8 @@ slide.addTable( [rows], {any Layout/Formatting OPTIONS} );
 
 ### Table Auto-Paging Options
 | Option          | Type    | Default   | Description            | Possible Values                          |
-| :-------------- | :------ | :-------- | :--------------------- | :--------------------------------------- |
-| `autoPage`      | boolean | `true`    | auto-page table        | `true` or `false`  |
+| :-------------- | :------ | :------ | :--------------------- | :--------------------------------------------------------- |
+| `autoPage`      | boolean | `true`  | auto-page table        | `true` or `false`. Ex: `{autoPage:false}`                  |
 | `lineWeight`    | float   | 0         | line weight value      | -1.0 to 1.0. Ex: `{lineWeight:0.5}` |
 | `newPageStartY` | object  |           | starting `y` value for tables on new Slides | 0-n OR 'n%'. Ex:`{newPageStartY:0.5}` |
 
@@ -730,7 +748,7 @@ tables. Use this option to ensure there is no wasted space and to guarantee a pr
 
 ### Table Formatting Options
 | Option       | Type    | Unit   | Default   | Description        | Possible Values  |
-| :----------- | :------ | :----- | :-------- | :----------------- | :--------------- |
+| :----------- | :------ | :----- | :-------- | :----------------- | :-------------------------------------------------------------------------------- |
 | `align`      | string  |        | `left`    | alignment          | `left` or `center` or `right` (or `l` `c` `r`) |
 | `bold`       | boolean |        | `false`   | bold text          | `true` or `false` |
 | `border`     | object  |        |           | cell border        | object with `pt` and `color` values. Ex: `{pt:'1', color:'f1f1f1'}` |
@@ -738,7 +756,7 @@ tables. Use this option to ensure there is no wasted space and to guarantee a pr
 | `color`      | string  |        |           | text color         | hex color code or [scheme color constant](#scheme-colors). Ex: `{color:'0088CC'}` |
 | `colspan`    | integer |        |           | column span        | 2-n. Ex: `{colspan:2}` |
 | `fill`       | string  |        |           | fill/bkgd color    | hex color code or [scheme color constant](#scheme-colors). Ex: `{color:'0088CC'}` |
-| `font_face`  | string  |        |           | font face          | Ex: 'Arial' |
+| `font_face`  | string  |        |           | font face          | Ex: `{font_face:'Arial'}`                                                         |
 | `font_size`  | number  | points |           | font size          | 1-256. Ex: `{font_size:12}` |
 | `italic`     | boolean |        | `false`   | italic text        | `true` or `false` |
 | `margin`     | number  | points |           | margin             | 0-99 (ProTip: use the same value from CSS `padding`) |
@@ -754,6 +772,7 @@ tables. Use this option to ensure there is no wasted space and to guarantee a pr
 ### Table Cell Formatting
 * Table cells can be either a plain text string or an object with text and options properties
 * When using an object, any of the formatting options above can be passed in `options` and will apply to that cell only
+* Cell borders can be removed (aka: borderless table) by passing a 'none' (Ex: `border:'none'`)
 
 Bullets and word-level formatting are supported inside table cells. Passing an array of objects with text/options values
 as the `text` value allows fine-grained control over the text inside cells.
@@ -849,14 +868,14 @@ Check the `pptxgen.shapes.js` file for a complete list of the hundreds of PowerP
 
 ### Shape Options
 | Option       | Type    | Unit   | Default   | Description         | Possible Values  |
-| :----------- | :------ | :----- | :-------- | :------------------ | :--------------- |
+| :----------- | :------ | :----- | :------ | :------------------ | :-------------------------------------------------------------------------- |
 | `x`          | number  | inches | `1.0`     | horizontal location | 0-n OR 'n%'. (Ex: `{x:'50%'}` will place object in the middle of the Slide) |
 | `y`          | number  | inches | `1.0`     | vertical location   | 0-n OR 'n%'. |
 | `w`          | number  | inches |           | width               | 0-n OR 'n%'. (Ex: `{w:'50%'}` will make object 50% width of the Slide) |
 | `h`          | number  | inches |           | height              | 0-n OR 'n%'. |
 | `align`      | string  |        | `left`    | alignment           | `left` or `center` or `right` |
 | `fill`       | string  |        |           | fill/bkgd color     | hex color code or [scheme color constant](#scheme-colors). Ex: `{color:'0088CC'}` |
-| `fill`       | object |   |   | fill/bkgd color | object with `type`, `color` and optional `alpha` keys. Ex: `fill:{type:'solid', color:'0088CC', alpha:25}` |
+| `fill`       | object  |        |         | fill/bkgd color  | object with `type`, `color`, `alpha` (opt). Ex: `fill:{type:'solid', color:'0088CC', alpha:25}` |
 | `flipH`      | boolean |        |           | flip Horizontal     | `true` or `false` |
 | `flipV`      | boolean |        |           | flip Vertical       | `true` or `false` |
 | `line`       | string  |        |           | border line color   | hex color code or [scheme color constant](#scheme-colors). Ex: `{line:'0088CC'}` |
@@ -915,6 +934,7 @@ Animated GIFs can be included in Presentations in one of two ways:
 | `data`       | string  |        |           | image data (base64) | base64-encoded image string. (either `data` or `path` is required) |
 | `hyperlink`  | string  |        |           | add hyperlink | object with `url` and optionally `tooltip`. Ex: `{ hyperlink:{url:'https://github.com'} }` |
 | `path`       | string  |        |           | image path          | Same as used in an (img src="") tag. (either `data` or `path` is required) |
+| `sizing`     | object  |        |           | transforms image    | See [Image Sizing](#image-sizing) |
 
 **NOTES**  
 * SVG images are not currently supported in PowerPoint or PowerPoint Online (even when encoded into base64). PptxGenJS does
@@ -949,7 +969,40 @@ slide.addImage({
 pptx.save('Demo-Images');
 ```
 
+### Image Sizing
+The `sizing` option provides cropping and scaling an image to a specified area. The property expects an object with the following structure:
 
+| Property     | Type    | Unit   | Default           | Description                                   | Possible Values  |
+| :----------- | :------ | :----- | :---------------- | :-------------------------------------------- | :--------------- |
+| `type`       | string  |        |                   | sizing algorithm                              | `'crop'`, `'contain'` or `'cover'` |
+| `w`          | number  | inches | `w` of the image  | area width                                    | 0-n |
+| `h`          | number  | inches | `h` of the image  | area height                                   | 0-n |
+| `x`          | number  | inches | `0`               | area horizontal position related to the image | 0-n (effective for `crop` only) |
+| `y`          | number  | inches | `0`               | area vertical position related to the image   | 0-n (effective for `crop` only)|
+
+Particular `type` values behave as follows:
+* `contain` works as CSS property `background-size` — shrinks the image (ratio preserved) to the area given by `w` and `h` so that the image is completely visible. If the area's ratio differs from the image ratio, an empty space will surround the image.
+* `cover` works as CSS property `background-size` — shrinks the image (ratio preserved) to the area given by `w` and `h` so that the area is completely filled. If the area's ratio differs from the image ratio, the image is centered to the area and cropped.
+* `crop` cuts off a part specified by image-related coordinates `x`, `y` and size `w`, `h`.
+
+NOTES:
+* If you specify an area size larger than the image for the `contain` and `cover` type, then the image will be stretched, not shrunken.
+* In case of the `crop` option, if the specified area reaches out of the image, then the covered empty space will be a part of the image.
+* When the `sizing` property is used, its `w` and `h` values represent the effective image size. For example, in the following snippet, width and height of the image will both equal to 2 inches and its top-left corner will be located at [1 inch, 1 inch]:
+```javascript
+slide.addImage({
+  path: '...',
+  w: 4,
+  h: 3,
+  x: 1,
+  y: 1,
+  sizing: {
+    type: 'contain',
+    w: 2,
+    h: 2
+  }
+});
+```
 **************************************************************************************************
 ## Adding Media (Audio/Video/YouTube)
 Syntax:
@@ -999,58 +1052,15 @@ Generating sample slides like those shown above is great for demonstrating libra
 but the reality is most of us will be required to produce presentations that have a certain design or
 corporate branding.
 
-PptxGenJS allows you to define Master Slides via objects that can then be used to provide branding
+PptxGenJS allows you to define Slide Master Layouts via objects that can then be used to provide branding
 functionality.
 
-Slide Masters are defined using the same object style used in Slides. Add these objects as a variable to a file that
-is included in the script src tags on your page, then reference them by name in your code.  
-E.g.: `<script lang="javascript" src="pptxgenjs.masters.js"></script>`
+Slide Masters are created by calling the `defineSlideMaster()` method along with an options object
+(same style used in Slides).  Once defined, you can pass the Master title to `addNewSlide()` and that Slide will
+use the Layout previously defined.  See the demo under /examples for several working examples.
 
-## Slide Master Examples
-`pptxgenjs.masters.js` contents:
-```javascript
-var gObjPptxMasters = {
-  MASTER_SLIDE: {
-    title:   'Slide Master',
-    bkgd:    'FFFFFF',
-    objects: [
-      { 'line':  { x: 3.5, y:1.00, w:6.00, line:'0088CC', line_size:5 } },
-      { 'rect':  { x: 0.0, y:5.30, w:'100%', h:0.75, fill:'F1F1F1' } },
-      { 'text':  { text:'Status Report', options:{ x:3.0, y:5.30, w:5.5, h:0.75 } } },
-      { 'image': { x:11.3, y:6.40, w:1.67, h:0.75, path:'images/logo.png' } }
-    ],
-    slideNumber: { x:0.3, y:'90%' }
-  },
-  TITLE_SLIDE: {
-    title:   'I am the Title Slide',
-    bkgd:    { data:'image/png;base64,R0lGONlhotPQBMAPyoAPosR[...]+0pEZbEhAAOw==' },
-    objects: [
-      { 'text':  { text:'Greetings!', options:{ x:0.0, y:0.9, w:'100%', h:1, font_face:'Arial', color:'FFFFFF', font_size:60, align:'c' } } },
-      { 'image': { x:11.3, y:6.40, w:1.67, h:0.75, path:'images/logo.png' } }
-    ]
-  }
-};
-```  
-Every object added to the global master slide variable `gObjPptxMasters` can then be referenced
-by their key names that you created (e.g.: "TITLE_SLIDE").  
-
-**TIP:**
-Pre-encode your images (base64) and add the string as the optional data key/val
-(see the `TITLE_SLIDE.images` object above)
-
-```javascript
-var pptx = new PptxGenJS();
-
-var slide1 = pptx.addNewSlide( pptx.masters.TITLE_SLIDE );
-slide1.addText('How To Create PowerPoint Presentations with JavaScript', { x:0.5, y:0.7, font_size:18 });
-// NOTE: Base master slide properties can be overridden on a selective basis:
-// Here we can set a new background color or image on-the-fly
-var slide2 = pptx.addNewSlide( pptx.masters.MASTER_SLIDE, { bkgd:'0088CC' } );
-var slide3 = pptx.addNewSlide( pptx.masters.MASTER_SLIDE, { bkgd:{ path:'images/title_bkgd.jpg' } } );
-var slide4 = pptx.addNewSlide( pptx.masters.MASTER_SLIDE, { bkgd:{ data:'image/png;base64,tFfInmP[...]=' } } );
-
-pptx.save();
-```
+The defined Masters become first-class Layouts in the exported PowerPoint presentation and can be changed
+via View > Slide Master and will affect the Slides created using that layout.
 
 ## Slide Master Object Options
 | Option        | Type    | Unit   | Default  | Description  | Possible Values       |
@@ -1061,11 +1071,36 @@ pptx.save();
 | `margin`      | number  | inches | `1.0`    | Slide margins      | 0.0 through Slide.width |
 | `margin`      | array   |        |          | Slide margins      | array of numbers in TRBL order. Ex: `[0.5, 0.75, 0.5, 0.75]` |
 | `objects`     | array   |        |          | Objects for Slide  | object with type and options. Type:`chart`,`image`,`line`,`rect` or `text`. [Example](https://github.com/gitbrent/PptxGenJS#slide-master-examples) |
-| `title`       | string  |        |          | Slide title        | some title |
+| `title`       | string  |        |          | Layout title/name  | some title |
 
-## Sample Slide Master File
-A sample masters file is included in the distribution folder and contain a couple of different slides to get you started.  
-Location: `PptxGenJS/dist/pptxgen.masters.js`
+**TIP:**
+Pre-encode your images (base64) and add the string as the optional data key/val (see `bkgd` above)
+
+## Slide Master Examples
+```javascript
+var pptx = new PptxGenJS();
+pptx.setLayout('LAYOUT_WIDE');
+
+pptx.defineSlideMaster({
+  title: 'MASTER_SLIDE',
+    bkgd:    'FFFFFF',
+    objects: [
+      { 'line':  { x: 3.5, y:1.00, w:6.00, line:'0088CC', line_size:5 } },
+      { 'rect':  { x: 0.0, y:5.30, w:'100%', h:0.75, fill:'F1F1F1' } },
+      { 'text':  { text:'Status Report', options:{ x:3.0, y:5.30, w:5.5, h:0.75 } } },
+      { 'image': { x:11.3, y:6.40, w:1.67, h:0.75, path:'images/logo.png' } }
+    ],
+    slideNumber: { x:0.3, y:'90%' }
+});
+
+var slide = pptx.addNewSlide('MASTER_SLIDE');
+slide.addText('How To Create PowerPoint Presentations with JavaScript', { x:0.5, y:0.7, font_size:18 });
+
+pptx.save();
+```
+
+
+
 
 **************************************************************************************************
 # Table-to-Slides Feature
@@ -1083,14 +1118,14 @@ Any variety of HTML tables can be turned into a series of slides (auto-paging) b
 
 ## Table-to-Slides Options
 | Option       | Type    | Unit   | Description         | Possible Values  |
-| :----------- | :------ | :----- | :------------------ | :--------------- |
+| :---------------- | :------ | :----- | :------------------------------ | :--------------------------------------------- |
 | `x`          | number  | inches | horizontal location | 0-256. Table will be placed here on each Slide |
 | `y`          | number  | inches | vertical location   | 0-256. Table will be placed here on each Slide |
 | `w`          | number  | inches | width               | 0-256. Default is (100% - Slide margins) |
 | `h`          | number  | inches | height              | 0-256. Default is (100% - Slide margins) |
-| `master`     | string  |        | master slide name   | Any pre-defined Master Slide. EX: `{ master:pptx.masters.TITLE_SLIDE }`
-| `addHeaderToEach` | boolean |   | add table headers to each slide | EX: `addHeaderToEach:true` |
-| `addImage`   | string  |        | add an image to each slide | Use the established syntax. EX: `{ addImage:{ path:"images/logo.png", x:10, y:0.5, w:1.2, h:0.75 } }` |
+| `master`          | string  |        | master slide name               | Any pre-defined Master Slide. Ex: `{ master:pptx.masters.TITLE_SLIDE }` |
+| `addHeaderToEach` | boolean |        | add table headers to each slide | Ex: `addHeaderToEach:true` |
+| `addImage`        | string  |        | add an image to each slide      | Ex: `{ addImage:{ path:"images/logo.png", x:10, y:0.5, w:1.2, h:0.75 } }` |
 | `addShape`   | string  |        | add a shape to each slide  | Use the established syntax. |
 | `addTable`   | string  |        | add a table to each slide  | Use the established syntax. |
 | `addText`    | string  |        | add text to each slide     | Use the established syntax. |
@@ -1203,7 +1238,7 @@ Here is a small [jsFiddle](https://jsfiddle.net/gitbrent/gx34jy59/5/) that is al
 Sometimes implementing a new library can be a difficult task and the slightest mistake will keep something from working. We've all been there!
 
 If you are having issues getting a presentation to generate, check out the demos in the `examples` directory. There
-are demos for both nodejs and client-browsers that contain working examples of every available library feature.
+are demos for both Nodejs and client-browsers that contain working examples of every available library feature.
 
 * Use a pre-configured jsFiddle to test with: [PptxGenJS Fiddle](https://jsfiddle.net/gitbrent/gx34jy59/5/)
 * Use Ask Question on [StackOverflow](http://stackoverflow.com/) - be sure to tag it with "PptxGenJS"
@@ -1211,19 +1246,19 @@ are demos for both nodejs and client-browsers that contain working examples of e
 **************************************************************************************************
 # Development Roadmap
 
-Version 2.0 will be released in late 2017 and will drop support for IE11 as we move to adopt more
+Version 2.0 will be released in late 2017/early 2018 and will drop support for IE11 as we move to adopt more
 JavaScript ES6 features and remove many instances of jQuery utility functions.
 
 **************************************************************************************************
 # Unimplemented Features
 
-The PptxgenJS library is not designed to replicate all the functionality of PowerPoint, meaning several features
+The PptxGenJS library is not designed to replicate all the functionality of PowerPoint, meaning several features
 are not on the development roadmap.
 
 These include:
 * Animations
 * Cross-Slide Links
-* Importing Existing Templates
+* Importing Existing Presentations and/or Templates
 * Outlines
 * SmartArt
 
@@ -1232,6 +1267,8 @@ These include:
 
 * [Officegen Project](https://github.com/Ziv-Barber/officegen) - For the Shape definitions and XML code
 * [Dzmitry Dulko](https://github.com/DzmitryDulko) - For getting the project published on NPM
+* [kajda90](https://github.com/kajda90) - For the new Master Slide Layouts
+* PPTX Chart Experts: [kajda90](https://github.com/kajda90), [Matt King](https://github.com/kyrrigle), [Mike Wilcox](https://github.com/clubajax)
 * Everyone who has submitted an Issue or Pull Request. :-)
 
 **************************************************************************************************
