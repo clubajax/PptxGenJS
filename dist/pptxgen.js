@@ -2489,6 +2489,7 @@ var PptxGenJS = function(){
 	function makeChartType (chartType, data, opts, valAxisId, catAxisId) {
 		var strXml = '';
 
+		console.log('chartType', chartType, opts);
 		switch ( chartType ) {
 			case 'area':
 			case 'bar':

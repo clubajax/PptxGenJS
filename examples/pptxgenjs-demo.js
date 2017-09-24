@@ -1846,21 +1846,120 @@ function genSlides_Chart(pptx) {
 		slide.addChart( pptx.charts.BAR, arrDataHighVals, optsChartBar4 );
 	}
 
+	// SLIDE 15: Error Bars --------------------------------
+	function slide15() {
+		var slide = pptx.addNewSlide();
+		slide.addTable( [ [{ text:'Chart Examples: Multi-Bar Charts', options:gOptsTitle }] ], { x:0.5, y:0.13, w:12.5 } );
+
+		function doMultiBar() {
+			// BOT-LEFT:
+			var opts = {
+				x:0.5, y:0.6, w:12.5,h:6,
+				barDir: 'bar',
+				barGrouping: 'stacked',
+				catAxisLabelColor: '999999',
+				catAxisLabelFontFace: 'Arial',
+				catAxisLabelFontSize: 14,
+				catAxisOrientation: 'minMax',
+				showLegend: false,
+				showTitle: false,
+				valAxisMaxVal: 100,
+				valAxisMinVal: 0,
+				valAxisMajorUnit: 20,
+
+				valAxes:[
+					{
+						showValAxisTitle: true,
+						valAxisTitle: 'Primary Value Axis'
+					}, {
+						showValAxisTitle: true,
+						valAxisTitle: 'Secondary Value Axis',
+						catAxisOrientation  : 'maxMin',
+						valAxisMajorUnit: 1,
+						valAxisMaxVal: 10,
+						valAxisMinVal: 1,
+						valGridLine: 'none'
+					}
+				],
+				catAxes: [
+					{
+						catAxisTitle: 'Primary Category Axis'
+					}, {
+						catAxisHidden: true
+					}
+
+				]
+			};
+
+			var labels = ['Q1', 'Q2', 'Q3', 'Q4', 'OT'];
+			var chartTypes = [
+				{
+					type: pptx.charts.BAR,
+					data: [{
+						name: 'Current',
+						labels: labels,
+						values: [5, 3, 2, 4, 7]
+					}],
+					options: {
+						barGrouping: 'standard',
+						secondaryValAxis: true,
+						secondaryCatAxis: true,
+						valueBarColors: true,
+						errorBars: {
+							type: 'minus', // minus, plus, both
+							valueType: '', //stdErr, fixedVal, percentage, stdDev
+							endStyle: 'cap', //cap, none (noEndCap val=1 or 0)
+							value: 5.0 //
+						},
+						chartColors: ['FF00FF']
+					}
+				},
+				{
+					type: pptx.charts.BAR,
+					data: [{
+						name: 'Bottom',
+						labels: labels,
+						values: [17, 26, 53, 10, 4]
+					},
+						{
+							name: 'Middle',
+							labels: labels,
+							values: [55, 40, 20, 30, 15]
+						},
+						{
+							name: 'Top',
+							labels: labels,
+							values: [10, 22, 25, 35, 70]
+						}],
+					options: {
+						barGrouping: 'stacked',
+						barGapWidthPct: 150
+					}
+				}
+			];
+
+			slide.addChart(chartTypes, opts);
+		}
+
+		doMultiBar();
+	}
+
 	// RUN ALL SLIDE DEMOS -----
-	slide1();
-	slide2();
-	slide3();
-	slide4();
-	slide5();
-	slide6();
-	slide7();
-	slide8();
-	slide9();
-	slide10();
-	slide11();
-	slide12();
-	slide13();
-	slide14();
+	// slide1();
+	// slide2();
+	// slide3();
+	// slide4();
+	// slide5();
+	// slide6();
+	// slide7();
+	// slide8();
+	// slide9();
+	// slide10();
+	// slide11();
+	// slide12();
+	// slide13();
+	// slide14();
+	slide15();
 }
 
 function genSlides_Media(pptx) {
