@@ -1866,7 +1866,7 @@ function genSlides_Chart(pptx) {
 				valAxisMaxVal: 100,
 				valAxisMinVal: 0,
 				valAxisMajorUnit: 20,
-
+				shadow: 'none',
 				valAxes:[
 					{
 						showValAxisTitle: true,
@@ -1906,17 +1906,24 @@ function genSlides_Chart(pptx) {
 						secondaryCatAxis: true,
 						valueBarColors: true,
 						errorBars: {
-							direction: 'minus', // minus, plus, both
-							valueType: 'fixedVal', //stdErr, fixedVal, percentage, stdDev
-							endStyle: 'cap', //cap, none (noEndCap val=1 or 0)
-							value: 5.0,
-							lineWidth: 5,
-							color: 'FF0000',
-							arrowStart: {
-								type: 'triangle'
+							direction: 'minus', // minus, plus, both NOT USED
+							valueType: 'fixedVal', //stdErr, fixedVal, percentage, stdDev NOT USED
+							endStyle: 'cap', //cap, none (noEndCap val=1 or 0) NOT USED
+							value: 5.0, // NOT USED
+							lineWidth: 2,
+							color: 'FFFF00',
+							Xstart: {
+								type: 'oval', // arrow, diamond, oval, triangle, stealth
+								width: 'lg', // lg. med, sm
+								length: 'lg'
+							},
+							end: {
+								type: 'oval',
+								width: 'lg',
+								length: 'lg'
 							}
 						},
-						chartColors: ['FF00FF']
+						chartColors: ['transparent']
 					}
 				},
 				{

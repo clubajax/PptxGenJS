@@ -2489,7 +2489,6 @@ var PptxGenJS = function(){
 	function makeChartType (chartType, data, opts, valAxisId, catAxisId) {
 		var strXml = '';
 
-		console.log('chartType', chartType, opts);
 		switch ( chartType ) {
 			case 'area':
 			case 'bar':
@@ -2533,6 +2532,7 @@ var PptxGenJS = function(){
 					// Fill and Border
 					var strSerColor = opts.chartColors[colorIndex % opts.chartColors.length];
 
+					console.log('strSerColor', strSerColor);
 					strXml += '  <c:spPr>';
 					if ( strSerColor == 'transparent' ) {
 						strXml += '<a:noFill/>';
@@ -2586,17 +2586,18 @@ var PptxGenJS = function(){
 						obj.values.forEach(function(value,index){
 							var invert = opts.invertedColors ? 0 : 1;
 							var colors = value < 0 && opts.invertedColors ? opts.invertedColors : opts.chartColors;
+							var color = colors[index % colors.length];
 							strXml += '  <c:dPt>';
 							strXml += '    <c:idx val="'+index+'"/>';
 							strXml += '    <c:invertIfNegative val="'+ invert +'"/>';
 							strXml += '    <c:bubble3D val="0"/>';
 							strXml += '    <c:spPr>';
-							if (opts.lineSize === 0){
-								strXml += '<a:ln><a:noFill/></a:ln>';
+							if (opts.lineSize === 0 || color === 'transparent') {
+								strXml += '<a:noFill/><a:ln><a:noFill/></a:ln>';
 							}
 							else {
 								strXml += '    <a:solidFill>';
-								strXml += '     <a:srgbClr val="' + colors[index % colors.length] + '"/>';
+								strXml += '     <a:srgbClr val="' + color + '"/>';
 								strXml += '    </a:solidFill>';
 							}
 							strXml += createShadowElement(opts.shadow, DEF_SHAPE_SHADOW);
@@ -2605,7 +2606,6 @@ var PptxGenJS = function(){
 						});
 					}
 
-					console.log('opts.errorBars', opts.errorBars);
 					// 1.5 "Error Bars"
 					{
 						if (opts.errorBars) {
@@ -2616,15 +2616,15 @@ var PptxGenJS = function(){
 
 							strXml += '  <c:val val="0.0"/>';
 							strXml += '  <c:spPr>';
-							strXml += '    <a:ln w="127000" cap="rnd">';
+							strXml += '    <a:ln w="'+ (opts.errorBars.lineWidth * ONEPT) +'" cap="rnd">';
 							strXml += '      <a:solidFill>';
-							strXml += '        <a:srgbClr val="' + (opts.errorBars || '000000') + '"/>';
+							strXml += '        <a:srgbClr val="' + (opts.errorBars.color || '000000') + '"/>';
 							strXml += '      </a:solidFill>';
-							if (opt.errorBars.arrowStart) {
-								strXml += '      <a:headEnd type="'+ (opt.errorBars.arrowStart) +'"/>';
+							if (opts.errorBars.start) {
+								strXml += '      <a:headEnd type="'+ (opts.errorBars.start.type) +'" w="'+ (opts.errorBars.start.width) +'" len="'+ (opts.errorBars.start.length) +'" />';
 							}
-							if (opt.errorBars.arrowEnd) {
-								strXml += '      <a:headEnd type="'+ (opt.errorBars.arrowEnd) +'"/>';
+							if (opts.errorBars.end) {
+								strXml += '      <a:tailEnd type="'+ (opts.errorBars.end.type) +'" w="'+ (opts.errorBars.end.width) +'" len="'+ (opts.errorBars.end.length) +'" />';
 							}
 							strXml += '    </a:ln>';
 							strXml += '  </c:spPr>';

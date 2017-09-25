@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<c:chartSpace xmlns:c="http://schemas.openxmlformats.org/drawingml/2006/chart"
+              xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main"
+              xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+    <c:chart>
+        <c:plotArea>
+            <c:lineChart>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd">
+                            <a:solidFill>
+                                <a:schemeClr val="accent1"/>
+                            </a:solidFill>
+                            <a:prstDash val="lgDashDotDot"/>
+                            <a:round/>
+                            <a:headEnd type="triangle" w="lg" len="sm"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd" cmpd="thickThin">
+                            <a:solidFill>
+                                <a:srgbClr val="FFC000"/>
+                            </a:solidFill>
+                            <a:prstDash val="lgDashDot"/>
+                            <a:round/>
+                            <a:headEnd type="oval" w="med" len="lg"/>
+                            <a:tailEnd type="none" w="lg" len="lg"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd">
+                            <a:solidFill>
+                                <a:schemeClr val="accent3"/>
+                            </a:solidFill>
+                            <a:prstDash val="lgDash"/>
+                            <a:round/>
+                            <a:headEnd type="oval"/>
+                            <a:tailEnd type="triangle" w="lg" len="lg"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd" cmpd="tri">
+                            <a:solidFill>
+                                <a:schemeClr val="accent4"/>
+                            </a:solidFill>
+                            <a:prstDash val="dashDot"/>
+                            <a:round/>
+                            <a:headEnd type="diamond" w="med" len="sm"/>
+                            <a:tailEnd type="arrow" w="lg" len="med"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd" cmpd="thinThick">
+                            <a:solidFill>
+                                <a:schemeClr val="accent5"/>
+                            </a:solidFill>
+                            <a:prstDash val="dash"/>
+                            <a:bevel/>
+                            <a:headEnd type="stealth" w="sm" len="lg"/>
+                            <a:tailEnd type="stealth"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="flat" cmpd="thickThin">
+                            <a:solidFill>
+                                <a:schemeClr val="accent6"/>
+                            </a:solidFill>
+                            <a:prstDash val="sysDash"/>
+                            <a:miter lim="800000"/>
+                            <a:headEnd type="arrow" w="sm" len="med"/>
+                            <a:tailEnd type="diamond" w="lg" len="lg"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="sq" cmpd="dbl">
+                            <a:solidFill>
+                                <a:schemeClr val="accent1">
+                                    <a:lumMod val="60000"/>
+                                </a:schemeClr>
+                            </a:solidFill>
+                            <a:prstDash val="sysDot"/>
+                            <a:round/>
+                            <a:headEnd type="triangle" w="sm" len="sm"/>
+                            <a:tailEnd type="oval" w="lg" len="med"/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+                <c:ser>
+                    <c:spPr>
+                        <a:ln w="127000" cap="rnd">
+                            <a:solidFill>
+                                <a:schemeClr val="accent2">
+                                    <a:lumMod val="60000"/>
+                                </a:schemeClr>
+                            </a:solidFill>
+                            <a:round/>
+                        </a:ln>
+                        <a:effectLst/>
+                    </c:spPr>
+                </c:ser>
+
+            </c:lineChart>
+        </c:plotArea>
+    </c:chart>
+</c:chartSpace>
