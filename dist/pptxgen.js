@@ -2605,6 +2605,34 @@ var PptxGenJS = function(){
 						});
 					}
 
+					console.log('opts.errorBars', opts.errorBars);
+					// 1.5 "Error Bars"
+					{
+						if (opts.errorBars) {
+							strXml += '<c:errBars>';
+							strXml += '  <c:errBarType val="minus"/>';
+							strXml += '  <c:errValType val="fixedVal"/>';
+							strXml += '  <c:noEndCap val="0"/>';
+
+							strXml += '  <c:val val="0.0"/>';
+							strXml += '  <c:spPr>';
+							strXml += '    <a:ln w="127000" cap="rnd">';
+							strXml += '      <a:solidFill>';
+							strXml += '        <a:srgbClr val="' + (opts.errorBars || '000000') + '"/>';
+							strXml += '      </a:solidFill>';
+							if (opt.errorBars.arrowStart) {
+								strXml += '      <a:headEnd type="'+ (opt.errorBars.arrowStart) +'"/>';
+							}
+							if (opt.errorBars.arrowEnd) {
+								strXml += '      <a:headEnd type="'+ (opt.errorBars.arrowEnd) +'"/>';
+							}
+							strXml += '    </a:ln>';
+							strXml += '  </c:spPr>';
+
+							strXml += '</c:errBars>';
+						}
+					}
+
 					// 2: "Categories"
 					{
 						strXml += '<c:cat>';

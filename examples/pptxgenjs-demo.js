@@ -1906,10 +1906,15 @@ function genSlides_Chart(pptx) {
 						secondaryCatAxis: true,
 						valueBarColors: true,
 						errorBars: {
-							type: 'minus', // minus, plus, both
-							valueType: '', //stdErr, fixedVal, percentage, stdDev
+							direction: 'minus', // minus, plus, both
+							valueType: 'fixedVal', //stdErr, fixedVal, percentage, stdDev
 							endStyle: 'cap', //cap, none (noEndCap val=1 or 0)
-							value: 5.0 //
+							value: 5.0,
+							lineWidth: 5,
+							color: 'FF0000',
+							arrowStart: {
+								type: 'triangle'
+							}
 						},
 						chartColors: ['FF00FF']
 					}
