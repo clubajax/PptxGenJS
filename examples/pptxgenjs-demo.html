@@ -421,14 +421,14 @@
 				<div id="contBtns" class="flex">
 					<div style="flex:2 0 auto">
 						<button id="btnRun" type="button" class="flatBtn shadow flatBtn-blueMd" onclick="runEveryTest()">Run All Demos</button>
-			</div>
+					</div>
 					<div style="flex:1 0 auto">
 						<button id="btnGit" type="button" class="flatBtn small flatBtn-nsOrange" onclick="window.open('https://github.com/gitbrent/PptxGenJS')">GitHub Site</button>
 					</div>
 					<div style="flex:1 0 auto; text-align:right;">
 						<button id="btnDoc" type="button" class="flatBtn small flatBtn-nsPurple" onclick="window.open('https://github.com/gitbrent/PptxGenJS#pptxgenjs')">View Documentation</button>
 					</div>
-		</div>
+				</div>
 			</div>
 		</div>
 
@@ -447,7 +447,7 @@
 				<div id="infoBar" class="table">
 					<div style="width:40%">
 						Library Version: <span id="getVersion"></span>
-				</div>
+					</div>
 					<div style="width:60%; text-align:right">
 					</div>
 				</div>
@@ -526,13 +526,18 @@
 							<div class="chkRow"><div class="svgCheck"></div>Doughnut Type</div>
 						</fieldset>
 						<fieldset>
-							<legend>Multi-Type Charts</legend>
+							<legend>X Y (Scatter) Chart</legend>
 							<h3>Slide 13</h3>
+							<div class="chkRow"><div class="svgCheck"></div>Various Options</div>
+						</fieldset>
+						<fieldset>
+							<legend>Multi-Type Charts</legend>
+							<h3>Slide 14</h3>
 							<div class="chkRow"><div class="svgCheck"></div>Various Mixed Chart Types</div>
 						</fieldset>
 						<fieldset>
 							<legend>Chart Options</legend>
-							<h3>Slide 14</h3>
+							<h3>Slide 15</h3>
 							<div class="chkRow"><div class="svgCheck"></div>Shadows and Transparent Color</div>
 						</fieldset>
 					</div>
@@ -598,7 +603,7 @@
 				<div class="sectionBox">
 					<div class="sectionCont">
 						<fieldset>
-					    	<legend>Shape Objects</legend>
+							<legend>Shape Objects</legend>
 
 							<h3>Slide 1</h3>
 							<div class="chkRow"><div class="svgCheck"></div>Shapes: Rectangle, Line, Oval, Triangle</div>
@@ -698,8 +703,8 @@
 								<div>
 									<div><label for="numTab2Padding">Cell Padding (points):</label></div>
 									<div><input  id="numTab2Padding" type="number" min="0" max="25" value="5" onchange="$('#tabAutoPaging th, #tabAutoPaging td').css('padding',$('#numTab2Padding').val()+'px')"></div>
-				</div>
-				</div>
+								</div>
+							</div>
 						</fieldset>
 						<fieldset>
 							<legend>Output Options</legend>
@@ -745,15 +750,15 @@
 					<fieldset class="demoFset">
 						<legend>Plain/Unstyled Table</legend>
 
-					<table id="tabNoStyle">
-					    <thead>
-					        <tr>
-					            <th>Name</th>
-					            <th>Email</th>
-					            <th>Company</th>
+						<table id="tabNoStyle">
+						    <thead>
+						        <tr>
+						            <th>Name</th>
+						            <th>Email</th>
+						            <th>Company</th>
 									<th>Feedback</th>
-					        </tr>
-					    </thead>
+						        </tr>
+						    </thead>
 							<tbody>
 								<tr>
 									<td>Elon Musk</td>
@@ -774,10 +779,10 @@
 									<td>The PowerPoint team needs to hire you</td>
 								</tr>
 							</tbody>
-					</table>
+						</table>
 						<div class="demoBtns">
 							<button type="button" class="flatBtn flatBtn-green" onclick="table2slidesDemoForTab('tabNoStyle')">Table-to-Slides Demo</button>
-					</div>
+						</div>
 					</fieldset>
 
 					<fieldset class="demoFset">
@@ -811,7 +816,7 @@
 						</table>
 						<div class="demoBtns">
 							<button type="button" class="flatBtn flatBtn-green" onclick="table2slidesDemoForTab('tabInheritStyle')">Table-to-Slides Demo</button>
-				</div>
+						</div>
 					</fieldset>
 				</div>
 
@@ -895,10 +900,10 @@
 								<code>});</code>
 							</div>
 						</fieldset>
-		</div>
+					</div>
 					<div>
 						<input type="button" class="flatBtn flatBtn-green" value="Generate Demo Presentation" onclick="execGenSlidesFuncs('Master')">
-	</div>
+					</div>
 				</div>
 			</div>
 		</div>
