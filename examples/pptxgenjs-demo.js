@@ -1898,7 +1898,7 @@ function genSlides_Chart(pptx) {
 					data: [{
 						name: 'Current',
 						labels: labels,
-						values: [5, 3, 2, 4, 7]
+						values: [.35, .65, .15, 0, 1]
 					}],
 					options: {
 						barGrouping: 'standard',
@@ -1929,20 +1929,20 @@ function genSlides_Chart(pptx) {
 				{
 					type: pptx.charts.BAR,
 					data: [{
-						name: 'Bottom',
+						name: 'Primary Brand Purchased',
 						labels: labels,
-						values: [17, 26, 53, 10, 4]
+						values: [.05, .20, .3, .15]
 					},
-						{
-							name: 'Middle',
-							labels: labels,
-							values: [55, 40, 20, 30, 15]
-						},
-						{
-							name: 'Top',
-							labels: labels,
-							values: [10, 22, 25, 35, 70]
-						}],
+					{
+						name: 'Middle',
+						labels: labels,
+						values: [55, 40, 20, 30, 15]
+					},
+					{
+						name: 'Top',
+						labels: labels,
+						values: [10, 22, 25, 35, 70]
+					}],
 					options: {
 						barGrouping: 'stacked',
 						barGapWidthPct: 150
