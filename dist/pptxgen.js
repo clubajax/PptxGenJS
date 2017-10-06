@@ -3133,7 +3133,7 @@ var PptxGenJS = function(){
 		else {
 			strXml += '  <c:majorTickMark val="out"/>';
 			strXml += '  <c:minorTickMark val="none"/>';
-			strXml += '  <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
+			strXml += '  <c:tickLblPos val="'+ (opts.catAxisLabelPos ||opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
 		}
 		strXml += '  <c:spPr>';
 		strXml += '   <a:ln w="12700" cap="flat">';
