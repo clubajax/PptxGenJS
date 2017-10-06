@@ -64,7 +64,7 @@ if ( NODEJS ) {
 var PptxGenJS = function(){
 	// APP
 	var APP_VER = "1.9.0-beta";
-	var APP_REL = "20170927";
+	var APP_REL = "20170928";
 
 	// CONSTANTS
 	var MASTER_OBJECTS = {
@@ -95,11 +95,11 @@ var PptxGenJS = function(){
 		'TRIANGLE': "&#x25B6;"
 	};
 	var CHART_TYPES = {
-		'AREA'    : { 'displayName':'Area Chart',      'name':'area'     },
-		'BAR'     : { 'displayName':'Bar Chart' ,      'name':'bar'      },
+		'AREA'    : { 'displayName':'Area Chart',     'name':'area'     },
+		'BAR'     : { 'displayName':'Bar Chart' ,     'name':'bar'      },
 		'DOUGHNUT': { 'displayName':'Doughnut Chart', 'name':'doughnut' },
-		'LINE'    : { 'displayName':'Line Chart',      'name':'line'     },
-		'PIE'     : { 'displayName':'Pie Chart' ,      'name':'pie'      },
+		'LINE'    : { 'displayName':'Line Chart',     'name':'line'     },
+		'PIE'     : { 'displayName':'Pie Chart' ,     'name':'pie'      },
 		'SCATTER' : { 'displayName':'Scatter Chart',  'name':'scatter'  }
 	};
 	var PIECHART_COLORS = ['5DA5DA','FAA43A','60BD68','F17CB0','B2912F','B276B2','DECF3F','F15854','A7A7A7', '5DA5DA','FAA43A','60BD68','F17CB0','B2912F','B276B2','DECF3F','F15854','A7A7A7'];
@@ -1334,14 +1334,14 @@ var PptxGenJS = function(){
 						+ '<fileVersion appName="xl" lastEdited="6" lowestEdited="6" rupBuild="14420"/>'
 						+ '<workbookPr />'
 						+ '<bookViews><workbookView xWindow="0" yWindow="0" windowWidth="15960" windowHeight="18080"/></bookViews>'
-						+ '<sheets><sheet name="Sheet1" sheetId="1" r:id="rId1"/></sheets>'
+						+ '<sheets><sheet name="Sheet1" sheetId="1" r:id="rId1" /></sheets>'
 						+ '<calcPr calcId="171026" concurrentCalc="0"/>'
 						+ '</workbook>\n'
 					);
 					zipExcel.file("xl/worksheets/_rels/sheet1.xml.rels",
 						'<?xml version="1.0" encoding="UTF-8" standalone="yes"?>'
 						+ '<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'
-						+ '  <Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table1.xml"/>'
+						+ '<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/table" Target="../tables/table1.xml"/>'
 						+ '</Relationships>\n'
 					);
 				}
@@ -1354,7 +1354,7 @@ var PptxGenJS = function(){
 						strSharedStrings += '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ (data.length+1) +'" uniqueCount="'+ (data.length+1) +'">'
 					}
 					else {
-					strSharedStrings += '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ (data[0].labels.length + data.length + 1) +'" uniqueCount="'+ (data[0].labels.length + data.length +1) +'">'
+						strSharedStrings += '<sst xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" count="'+ (data[0].labels.length+data.length+1) +'" uniqueCount="'+ (data[0].labels.length+data.length+1) +'">'
 						// B: Add 'blank' for A1
 						strSharedStrings += '<si><t xml:space="preserve"></t></si>';
 					}
@@ -1364,7 +1364,7 @@ var PptxGenJS = function(){
 
 					// D: Add `labels`/Categories
 					if ( chartObject.opts.type.name != 'scatter' ) {
-					data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ decodeXmlEntities(label) +'</t></si>'; });
+						data[0].labels.forEach(function(label,idx){ strSharedStrings += '<si><t>'+ decodeXmlEntities(label) +'</t></si>'; });
 					}
 
 					strSharedStrings += '</sst>\n';
@@ -1380,13 +1380,13 @@ var PptxGenJS = function(){
 						data.forEach(function(obj,idx){ strTableXml += '<tableColumn id="'+ (idx+1) +'" name="'+ (idx==0 ? 'X-Values' : 'Y-Value '+idx) +'" />' });
 					}
 					else {
-					strTableXml += '<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ref="A1:'+ LETTERS[data.length] + (data[0].labels.length+1) +'" totalsRowShown="0">';
+						strTableXml += '<table xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" id="1" name="Table1" displayName="Table1" ref="A1:'+ LETTERS[data.length] + (data[0].labels.length+1) +'" totalsRowShown="0">';
 						strTableXml += '<tableColumns count="' + (data.length+1) +'">';
-					strTableXml += '<tableColumn id="1" name=" "/>';
+						strTableXml += '<tableColumn id="1" name=" " />';
 						data.forEach(function(obj,idx){ strTableXml += '<tableColumn id="'+ (idx+2) +'" name="'+ decodeXmlEntities(obj.name) +'" />' });
 					}
 					strTableXml += '</tableColumns>';
-					strTableXml += '<tableStyleInfo showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0"/>';
+					strTableXml += '<tableStyleInfo showFirstColumn="0" showLastColumn="0" showRowStripes="1" showColumnStripes="0" />';
 					strTableXml += '</table>';
 					zipExcel.file("xl/tables/table1.xml", strTableXml);
 				}
@@ -1398,16 +1398,16 @@ var PptxGenJS = function(){
 					strSheetXml += '<dimension ref="A1:'+ LETTERS[(data.length-1)] + (data[0].values.length+1) +'" />';
 				}
 				else {
-				strSheetXml += '<dimension ref="A1:'+ LETTERS[data.length] + (data[0].labels.length+1) +'"/>';
+					strSheetXml += '<dimension ref="A1:'+ LETTERS[data.length] + (data[0].labels.length+1) +'" />';
 				}
 
-				strSheetXml += '<sheetViews><sheetView tabSelected="1" workbookViewId="0"><selection activeCell="B1" sqref="B1"/></sheetView></sheetViews>';
+				strSheetXml += '<sheetViews><sheetView tabSelected="1" workbookViewId="0"><selection activeCell="B1" sqref="B1" /></sheetView></sheetViews>';
 				strSheetXml += '<sheetFormatPr baseColWidth="10" defaultColWidth="11.5" defaultRowHeight="12" />';
 				if ( chartObject.opts.type.name == 'scatter' ) {
-				strSheetXml += '<cols>';
+					strSheetXml += '<cols>';
 					strSheetXml += '<col min="1" max="'+ data.length +'" width="11" customWidth="1" />';
 					//data.forEach(function(obj,idx){ strSheetXml += '<col min="'+(idx+1)+'" max="'+(idx+1)+'" width="11" customWidth="1" />' });
-				strSheetXml += '</cols>';
+					strSheetXml += '</cols>';
 					/* EX: INPUT: `data`
 					[
 						{ name:'X-Axis'  , values:[10,11,12,13,14,15,16,17,18,19,20] },
@@ -1421,7 +1421,7 @@ var PptxGenJS = function(){
 						2|    11    |     22     |
 						-|----------|------------|
 					*/
-				strSheetXml += '<sheetData>';
+					strSheetXml += '<sheetData>';
 
 					// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
 					strSheetXml += '<row r="1" spans="1:'+ data.length +'">';
@@ -1454,52 +1454,52 @@ var PptxGenJS = function(){
 					strSheetXml += '</cols>';
 					strSheetXml += '<sheetData>';
 
-				/* EX: INPUT: `data`
-				[
-					{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
-					{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
-					{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
-				];
-				*/
-				/* EX: OUTPUT: lineChart Worksheet:
-					-|---A---|--B--|--C--|--D--|
-					1|       | Red | Amb | Grn |
-					2|Jan-17 |   11|   22|   33|
-					3|Feb-17 |   55|   43|   70|
-					4|Mar-17 |   56|  143|   99|
-					5|Apr-17 |   65|    3|  120|
-					6|May-17 |   75|   93|  170|
-					-|-------|-----|-----|-----|
-				*/
+					/* EX: INPUT: `data`
+					[
+						{ name:'Red', labels:['Jan..May-17'], values:[11,13,14,15,16] },
+						{ name:'Amb', labels:['Jan..May-17'], values:[22, 6, 7, 8, 9] },
+						{ name:'Grn', labels:['Jan..May-17'], values:[33,32,42,53,63] }
+					];
+					*/
+					/* EX: OUTPUT: lineChart Worksheet:
+						-|---A---|--B--|--C--|--D--|
+						1|       | Red | Amb | Grn |
+						2|Jan-17 |   11|   22|   33|
+						3|Feb-17 |   55|   43|   70|
+						4|Mar-17 |   56|  143|   99|
+						5|Apr-17 |   65|    3|  120|
+						6|May-17 |   75|   93|  170|
+						-|-------|-----|-----|-----|
+					*/
 
-				// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
+					// A: Create header row first (NOTE: Start at index=1 as headers cols start with 'B')
 					strSheetXml += '<row r="1" spans="1:'+ (data.length+1) +'">';
 					strSheetXml += '<c r="A1" t="s"><v>0</v></c>';
 					for (var idx=1; idx<=data.length; idx++) {
-					// FIXME: Max cols is 52
-					strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
+						// FIXME: Max cols is 52
+						strSheetXml += '<c r="'+ ( idx < 26 ? LETTERS[idx] : 'A'+LETTERS[idx%LETTERS.length] ) +'1" t="s">'; // NOTE: use `t="s"` for label cols!
 						strSheetXml += '<v>'+ idx +'</v>';
-					strSheetXml += '</c>';
-				}
-				strSheetXml += '</row>';
+						strSheetXml += '</c>';
+					}
+					strSheetXml += '</row>';
 
 					// B: Add data row(s) for each category
 					data[0].labels.forEach(function(cat,idx){
-					// Leading col is reserved for the label, so hard-code it, then loop over col values
+						// Leading col is reserved for the label, so hard-code it, then loop over col values
 						strSheetXml += '<row r="'+ (idx+2) +'" spans="1:'+ (data.length+1) +'">';
-					strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
+						strSheetXml += '<c r="A'+ (idx+2) +'" t="s">';
 						strSheetXml += '<v>'+ (data.length+idx+1) +'</v>';
-					strSheetXml += '</c>';
-						for (var idy=0; idy<data.length; idy++) {
-						strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
-							strSheetXml += '<v>'+ (data[idy].values[idx] || '') +'</v>';
 						strSheetXml += '</c>';
+						for (var idy=0; idy<data.length; idy++) {
+							strSheetXml += '<c r="'+ ( (idy+1) < 26 ? LETTERS[(idy+1)] : 'A'+LETTERS[(idy+1)%LETTERS.length] ) +''+ (idx+2) +'">';
+							strSheetXml += '<v>'+ (data[idy].values[idx] || '') +'</v>';
+							strSheetXml += '</c>';
 						}
-					strSheetXml += '</row>';
-				});
+						strSheetXml += '</row>';
+					});
 				}
 				strSheetXml += '</sheetData>';
-				strSheetXml += '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3"/>';
+				strSheetXml += '<pageMargins left="0.7" right="0.7" top="0.75" bottom="0.75" header="0.3" footer="0.3" />';
 				// Link the `table1.xml` file to define an actual Table in Excel
 				// NOTE: This onyl works with scatter charts - all others give a "cannot find linked file" error
 				// ....: Since we dont need the table anyway (chart data can be edited/range selected, etc.), just dont use this
@@ -2410,7 +2410,7 @@ var PptxGenJS = function(){
 
 		// A: Create Chart XML -----------------------------------------------------------
 		if ( Array.isArray(rel.opts.type) ) {
-			rel.opts.type.forEach(function (type) {
+			rel.opts.type.forEach(function(type){
 				var chartType = type.type.name;
 				var data = type.data;
 				var options = mix(rel.opts, type.options);
@@ -2575,9 +2575,9 @@ var PptxGenJS = function(){
 				strXml += '<c:'+ chartType +'Chart>';
 				if ( chartType == 'bar' ) {
 					strXml += '<c:barDir val="'+ opts.barDir +'"/>';
-				strXml += '  <c:grouping val="'+ opts.barGrouping + '"/>';
+					strXml += '<c:grouping val="'+ opts.barGrouping + '"/>';
 				}
-				strXml += '  <c:varyColors val="0"/>';
+				strXml += '<c:varyColors val="0"/>';
 
 				// 2: "Series" block for every data row
 				/* EX:
@@ -2675,9 +2675,11 @@ var PptxGenJS = function(){
 								strXml += '<a:noFill/><a:ln><a:noFill/></a:ln>';
 							}
 							else {
+								strXml += '<a:ln>';
 								strXml += '<a:solidFill>';
 								strXml += '     <a:srgbClr val="' + color + '"/>';
 								strXml += '</a:solidFill>';
+								strXml += '</a:ln>';
 							}
 							strXml += createShadowElement(opts.shadow, DEF_SHAPE_SHADOW);
 							strXml += '    </c:spPr>';
@@ -2772,7 +2774,7 @@ var PptxGenJS = function(){
 				strXml += '        </a:defRPr>';
 				strXml += '      </a:pPr></a:p>';
 				strXml += '    </c:txPr>';
-				if ( opts.type != 'area' ) strXml += '    <c:dLblPos val="'+ (opts.dataLabelPosition || 'outEnd') +'"/>';
+				if ( opts.type != 'area' ) strXml += '<c:dLblPos val="'+ (opts.dataLabelPosition || 'outEnd') +'"/>';
 				strXml += '    <c:showLegendKey val="0"/>';
 				strXml += '    <c:showVal val="'+ (opts.showValue ? '1' : '0') +'"/>';
 				strXml += '    <c:showCatName val="0"/>';
@@ -3129,9 +3131,9 @@ var PptxGenJS = function(){
 			strXml += '  <c:tickLblPos val="nextTo"/>';
 		}
 		else {
-		strXml += '  <c:majorTickMark val="out"/>';
-		strXml += '  <c:minorTickMark val="none"/>';
-		strXml += '  <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
+			strXml += '  <c:majorTickMark val="out"/>';
+			strXml += '  <c:minorTickMark val="none"/>';
+			strXml += '  <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'low' : 'nextTo') +'"/>';
 		}
 		strXml += '  <c:spPr>';
 		strXml += '   <a:ln w="12700" cap="flat">';
@@ -3153,8 +3155,8 @@ var PptxGenJS = function(){
 		strXml += '    <a:p>';
 		strXml += '    <a:pPr>';
 		strXml += '    <a:defRPr sz="'+ (opts.catAxisLabelFontSize || DEF_FONT_SIZE) +'00" b="0" i="0" u="none" strike="noStrike">';
-		strXml += '<a:solidFill><a:srgbClr val="'+ (opts.catAxisLabelColor || DEF_FONT_COLOR) +'"/></a:solidFill>';
-		strXml += '<a:latin typeface="'+ (opts.catAxisLabelFontFace || 'Arial') +'"/>';
+		strXml += '      <a:solidFill><a:srgbClr val="'+ (opts.catAxisLabelColor || DEF_FONT_COLOR) +'"/></a:solidFill>';
+		strXml += '      <a:latin typeface="'+ (opts.catAxisLabelFontFace || 'Arial') +'"/>';
 		strXml += '   </a:defRPr>';
 		strXml += '  </a:pPr>';
 		strXml += '  <a:endParaRPr lang="'+ (opts.lang || 'en-US') +'"/>';
@@ -3223,9 +3225,9 @@ var PptxGenJS = function(){
 			strXml += '  <c:tickLblPos val="nextTo"/>';
 		}
 		else {
-		strXml += ' <c:majorTickMark val="out"/>';
-		strXml += ' <c:minorTickMark val="none"/>';
-		strXml += ' <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'nextTo' : 'low') +'"/>';
+			strXml += ' <c:majorTickMark val="out"/>';
+			strXml += ' <c:minorTickMark val="none"/>';
+			strXml += ' <c:tickLblPos val="'+ (opts.barDir == 'col' ? 'nextTo' : 'low') +'"/>';
 		}
 		strXml += '<c:spPr>';
 		strXml += '   <a:ln w="12700" cap="flat">';
