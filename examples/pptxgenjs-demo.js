@@ -1090,10 +1090,8 @@ function genSlides_Chart(pptx) {
 				valAxisLineShow: false,
 				catAxisLabelPos: 'low',
 				valueBarColors: true,
-
+				shadow: 'none',
 				valGridLine: { color: 'EEEEEE' },
-
-				//dataLabelPosition: 'outEnd',
 				chartColors: ['0077BF','4E9D2D','ECAA00','5FC4E3','DE4216','154384','7D666A','A3C961','EF907B','9BA0A3'],
 				invertedColors: ['0065A2','428526','C99100','51A7C1','BD3813','123970','6A575A','8BAB52','CB7A69','84888B'],
 				barGapWidthPct: 25,
@@ -2029,7 +2027,7 @@ function genSlides_Chart(pptx) {
 	// slide3();
 	// slide4();
 	// slide5();
- slide6();
+	slide6();
 	// slide7();
 	// slide8();
 	// slide9();
