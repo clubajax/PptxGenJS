@@ -1804,7 +1804,7 @@ function genSlides_Chart(pptx) {
 
 	}
 
-	function slide14 () {
+	function slide16 () {
 		var slide = pptx.addNewSlide();
 		slide.addTable( [ [{ text:'Chart Examples: Charts using shadow options', options:gOptsTitle }] ], { x:0.5, y:0.13, w:12.5 } );
 
@@ -1913,7 +1913,7 @@ function genSlides_Chart(pptx) {
 	}
 
 	// SLIDE 15: Error Bars --------------------------------
-	function slide15() {
+	function slide17() {
 		var slide = pptx.addNewSlide();
 		slide.addTable( [ [{ text:'Chart Examples: Multi-Bar Charts', options:gOptsTitle }] ], { x:0.5, y:0.13, w:12.5 } );
 
@@ -2022,22 +2022,25 @@ function genSlides_Chart(pptx) {
 		doMultiBar();
 	}
 
+	console.log('FOO');
 	// RUN ALL SLIDE DEMOS -----
-	// slide1();
-	// slide2();
-	// slide3();
-	// slide4();
-	// slide5();
-	// slide6();
-	// slide7();
-	// slide8();
-	// slide9();
-	// slide10();
-	// slide11();
-	// slide12();
-	// slide13();
-	// slide14();
+	slide1();
+	slide2();
+	slide3();
+	slide4();
+	slide5();
+	slide6();
+	slide7();
+	slide8();
+	slide9();
+	slide10();
+	slide11();
+	slide12();
+	slide13();
+	slide14();
 	slide15();
+	slide16();
+	slide17();
 }
 
 function genSlides_Media(pptx) {
