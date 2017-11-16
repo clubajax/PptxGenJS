@@ -2611,7 +2611,6 @@ var PptxGenJS = function(){
 					// Fill and Border
 					var strSerColor = opts.chartColors[colorIndex % opts.chartColors.length];
 
-					console.log('strSerColor', strSerColor);
 					strXml += '  <c:spPr>';
 					if ( strSerColor == 'transparent' ) {
 						strXml += '<a:noFill/>';
